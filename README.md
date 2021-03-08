@@ -10,7 +10,7 @@ After trying several other soundboard tools available for download, I was never 
 
 I found a tool by [Asger Juul Brunshøj](https://github.com/plul/Public-AutoHotKey-Scripts) that uses a GUI to allow you to run [AutoHotKey](https://www.autohotkey.com) macros via text commands.  I've adjusted the script quite a bit to fit my needs, and what we have now is Squishy's Soundboard!
 
-![sample image](/misc/sample.png)
+![sample image](./misc/sample.PNG)
 
 ## How it works
 This repo has a `/sounds` folder with a couple of sounds to get you started.  The script scans filenames in order to generate a list of categories and individual sounds, which are then populated into the interface.
