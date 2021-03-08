@@ -71,6 +71,7 @@ sb_gui_create() {
   Gui, Font, s09, Segoe UI
   Gui, Add, ListView, %gui_control_options% x16 y72 AltSubmit gsb_handle_category_listview, Category
   Gui, Add, ListView, %gui_control_options% x16 y264 AltSubmit h300 gsb_handle_individual_listview, Name | Categories | File Name
+  Gui, Add, Button, Default w80 gsb_stop_sound, Stop Sound
 
   ; Add each category to the category listview  
   Gui, ListView, SysListView321

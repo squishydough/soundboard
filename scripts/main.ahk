@@ -30,15 +30,16 @@ CapsLock & Space::
     main_gui_destroy()
     return
   }
-  main_gui_state = open
-  Gui, Margin, 16, 16
-  Gui, Color, 1d1f21, 282a2e
-  Gui, +AlwaysOnTop -SysMenu +ToolWindow -caption +Border
-  Gui, Font, s11, Segoe UI
-  Gui, Add, Text, %gui_control_options% vgui_main_title, ¯\_(ツ)_/¯
-  Gui, Font, s10, Segoe UI
-  Gui, Add, Edit, %gui_control_options% vmain_user_input gmain_handle_user_input
-  Gui, Show,, mainGUI
+  sb_gui_create()
+  ; main_gui_state = open
+  ; Gui, Margin, 16, 16
+  ; Gui, Color, 1d1f21, 282a2e
+  ; Gui, +AlwaysOnTop -SysMenu +ToolWindow -caption +Border
+  ; Gui, Font, s11, Segoe UI
+  ; Gui, Add, Text, %gui_control_options% vgui_main_title, ¯\_(ツ)_/¯
+  ; Gui, Font, s10, Segoe UI
+  ; Gui, Add, Edit, %gui_control_options% vmain_user_input gmain_handle_user_input
+  ; Gui, Show,, mainGUI
   return
 
 ;-------------------------------------------------------------------------------
