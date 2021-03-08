@@ -20,11 +20,7 @@ The base requirements to use the script require installation of both [AutoHotKey
 
 To start using the script, double-click `Squishy.ahk` in the main folder.  This starts the script, which will listen for you to press `Caps Lock + Spacebar`.  **Note: By default, Caps Lock will not work while the script is working.  You can press `Alt + CapsLock` to toggle it on and off.**
 
-By pressing `Caps Lock + Spacebar`, the GUI will pop up with a text box.  You get a couple of commands at this point that you may find useful.
-
-- _stop_ - Stops any currently playing soundboard sound.
-- _rel_ - Reloads the AHK script.
-- _sb_ - Launches the soundboard GUI.
+Once you press `Caps Lock + Spacebar`, you should be looking at the soundboard GUI.  If you are not, try the key combo again!
 
 ## Using the soundboard GUI
 You have a couple of different ways to play a random or specific sound.
