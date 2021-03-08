@@ -1,8 +1,8 @@
 ﻿global sb_gui_state = closed
 ; category textfield user input
-global sb_user_category := ""
+global sb_user_category_text := ""
 ; individual file textfield user input
-global sb_user_individual := ""
+global sb_user_individual_text := ""
 global vlc_pid := ""
 global vlc_path := ""
 global vlc_audio_out := ""
@@ -66,8 +66,8 @@ sb_gui_create() {
   Gui, Add, Text, %gui_control_options%, Random Sound From Category
   Gui, Add, Text, %gui_control_options% x16 y208, Specific Sound
   Gui, Font, s10, Segoe UI
-  Gui, Add, Edit, %gui_control_options% x16 y40 vsb_user_category gsb_handle_category_textfield
-  Gui, Add, Edit, %gui_control_options% x16 y232 vsb_user_individual gsb_handle_individual_textfield
+  Gui, Add, Edit, %gui_control_options% x16 y40 vsb_user_category_text gsb_handle_category_textfield
+  Gui, Add, Edit, %gui_control_options% x16 y232 vsb_user_individual_text gsb_handle_individual_textfield
   Gui, Font, s09, Segoe UI
   Gui, Add, ListView, %gui_control_options% x16 y72 AltSubmit gsb_handle_category_listview, Category
   Gui, Add, ListView, %gui_control_options% x16 y264 AltSubmit h300 gsb_handle_individual_listview, Name | Categories | File Name
@@ -136,14 +136,32 @@ sb_handle_category_textfield() {
   ; Set focus on correct listview
   Gui, ListView, SysListView321
 
+  ; Split the user text apart at spaces so that 
+  ; words don't have to be next to each other to be found
+  user_input_slugs := StrSplit(sb_user_category_text, " ")
+
+  ; Array of categories that match the user slugs
   matched_categories := []
+
   categories := sb_get_all_categories()
+
   For index, category in categories
   {
-    if !InStr(category, sb_user_category)
+    valid_category := true
+    For j, slug in user_input_slugs
+    {
+      if !InStr(category, slug)
+      {
+        valid_category := false
+        continue
+      }
+    }
+
+    if(valid_category = false)
     {
       continue
     }
+
     matched_categories.push(category)
   }
 
@@ -187,14 +205,33 @@ sb_handle_individual_textfield() {
   ; Set focus on correct listview
   Gui, ListView, SysListView322
 
+  ; Split the user text apart at spaces so that 
+  ; words don't have to be next to each other to be found
+  user_input_slugs := StrSplit(sb_user_individual_text, " ")
+
+  ; Array of files that match the user slugs
   matched_files := []
+
   files := sb_get_files()
+
   For index, file in files
   {
-    if !InStr(file, sb_user_individual)
+    file_name := sb_get_file_name(file)
+    valid_file := true
+    For j, slug in user_input_slugs
+    {
+      if !InStr(file_name, slug)
+      {
+        valid_file := false
+        continue
+      }
+    }
+
+    if(valid_file = false)
     {
       continue
     }
+    
     matched_files.push(file)
   }
 
@@ -305,6 +342,14 @@ sb_get_file_categories(file_name) {
   return categories
 }
 
+;----------------------------------------------------
+;;;   Removes categories from a file name
+;----------------------------------------------------
+sb_get_file_name(file){
+  file_name_split := StrSplit(file, "[")
+  file_name := file_name_split[1]
+  return file_name
+}
 ;----------------------------------------------------
 ;;;   Plays a random sound from a provided category
 ;----------------------------------------------------
