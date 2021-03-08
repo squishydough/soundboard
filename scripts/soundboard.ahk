@@ -62,16 +62,19 @@ sb_gui_create() {
   Gui, Color, 1d1f21, 282a2e
   Gui, +AlwaysOnTop -SysMenu +ToolWindow -caption +Border
   
-  ; Add random categories listview
-
   Gui, Font, s11, Segoe UI
   Gui, Add, Text, %gui_control_options%, Random Sound From Category
+  Gui, Add, Text, %gui_control_options% x16 y208, Specific Sound
   Gui, Font, s10, Segoe UI
-  Gui, Add, Edit, %gui_control_options% vsb_user_category gsb_handle_category_textfield
-  Gui, Add, ListView, %gui_control_options% AltSubmit gsb_handle_category_listview, Category
+  Gui, Add, Edit, %gui_control_options% x16 y40 vsb_user_category gsb_handle_category_textfield
+  Gui, Add, Edit, %gui_control_options% x16 y232 vsb_user_individual gsb_handle_individual_textfield
+  Gui, Font, s09, Segoe UI
+  Gui, Add, ListView, %gui_control_options% x16 y72 AltSubmit gsb_handle_category_listview, Category
+  Gui, Add, ListView, %gui_control_options% x16 y264 AltSubmit h300 gsb_handle_individual_listview, Name | Categories | File Name
 
+  ; Add each category to the category listview  
+  Gui, ListView, SysListView321
   categories := sb_get_all_categories()
-  ; Add each file to the listview
   For index, category in categories
   {
 
@@ -80,14 +83,8 @@ sb_gui_create() {
   ; Autosize columns
   LV_ModifyCol() 
 
-  ; Add individual items listview
-
-  Gui, Font, s11, Segoe UI
-  Gui, Add, Text, %gui_control_options%, Specific Sound
-  Gui, Font, s10, Segoe UI
-  Gui, Add, Edit, %gui_control_options% vsb_user_individual gsb_handle_individual_textfield
-  Gui, Add, ListView, %gui_control_options% AltSubmit h300 gsb_handle_individual_listview, Name | Categories | File Name
-
+  ; Add each file to the files listview
+  Gui, ListView, SysListView322
   files := sb_get_files()
   ; Add each file to the listview
   For index, file in files
