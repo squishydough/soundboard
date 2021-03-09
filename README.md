@@ -23,7 +23,7 @@ To start using the script, double-click `Squishy.ahk` in the main folder.  This 
 Once you press `Caps Lock + Spacebar`, you should be looking at the soundboard GUI.  If you are not, try the key combo again!
 
 ## Using the soundboard GUI
-Click on a specific category or individual sound file in the list to play it.  You can use the textbox above each list to filter the list.
+Use the textbox above each list to filter the items in the list.  You can either double-click an item in the list, or press `Enter` in the textbox to play the sound.  **Note: Pressing `Enter` in the textbox only works if there is one item remaining in the list.**
 
 ## Adding sounds
 When I made this script, I wanted it to be very easy to add and organize your sounds without needing to do anything with the script.  In the project root, there is a sounds folder.  All mp3 files you add to this folder will automatically be brought into the script as soon as they are added.

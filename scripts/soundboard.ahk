@@ -1,10 +1,17 @@
-﻿global sb_gui_state = closed
+﻿global sb_gui_state := closed
 ; category textfield user input
 global sb_user_category_text := ""
 ; individual file textfield user input
 global sb_user_individual_text := ""
+; tracks which filter field the user is typing in
+; this helps with 
+global sb_which_field_focused := ""
+global sb_button_pressed := false
+; The pid of the vlc instance - used for stopping sounds
 global vlc_pid := ""
+; Path to the VLC executable
 global vlc_path := ""
+; The waveout device as listed in VLC
 global vlc_audio_out := ""
 
 ;----------------------------------------------------
@@ -27,7 +34,9 @@ sb_gui_autoexecute:
   ; -E0x200 removes border around Edit controls
   gui_control_options := "xm w220 " . cForeground . " -E0x200"
   ; Initialize variable to keep track of the state of the GUI
-  sb_gui_state = closed
+  sb_gui_state := closed
+  ; Initialize other state vars
+  sb_button_pressed := false
   return
 
 ;----------------------------------------------------
@@ -68,7 +77,7 @@ sb_gui_create() {
   Gui, Font, s10, Segoe UI
   Gui, Add, Edit, %gui_control_options% x16 y40 vsb_user_category_text gsb_handle_category_textfield -WantReturn
   Gui, Add, Edit, %gui_control_options% x16 y232 vsb_user_individual_text gsb_handle_individual_textfield
-  Gui, Add, Button, x-10 y-10 w1 h1 gsb_handle_category_textfield
+  Gui, Add, Button, Default x-10 y-10 w1 h1 gsb_handle_user_input_on_enter
   Gui, Font, s09, Segoe UI
   Gui, Add, ListView, %gui_control_options% x16 y72 AltSubmit gsb_handle_category_listview, Category
   Gui, Add, ListView, %gui_control_options% x16 y264 AltSubmit h300 gsb_handle_individual_listview, Name | Categories | File Name
@@ -115,7 +124,7 @@ sb_gui_create() {
   Gui, Show,, sbGUI
 }
 ;----------------------------------------------------
-;;;   SDestroys the soundboard GUI
+;;;   Destroys the soundboard GUI
 ;----------------------------------------------------
 #WinActivateForce
 sb_gui_destroy() {
@@ -134,6 +143,8 @@ sb_gui_destroy() {
 sb_handle_category_textfield() {
   Gui, Submit, NoHide
 
+  ; set that this field is focused
+  sb_which_field_focused := "category"
   ; Set focus on correct listview
   Gui, ListView, SysListView321
 
@@ -176,11 +187,17 @@ sb_handle_category_textfield() {
   ; Autosize columns
   LV_ModifyCol()
 
-  ; if matched_categories.Length() = 1
-  ; {
-  ;   LV_GetText(RowText, 1)
-  ;   sb_play_random_sound(RowText)
-  ; }
+  if(sb_button_pressed = true)
+  {
+    sb_button_pressed := false
+
+    if(matched_categories.Length() = 1)
+    {
+      LV_GetText(RowText, 1)
+      sb_play_random_sound(RowText)
+    }
+  }
+
 }
 
 ;----------------------------------------------------
@@ -203,6 +220,8 @@ sb_handle_category_listview() {
 sb_handle_individual_textfield() {
   Gui, Submit, NoHide
 
+  ;Note that this field is focused
+  sb_which_field_focused := "individual"
   ; Set focus on correct listview
   Gui, ListView, SysListView322
 
@@ -262,13 +281,16 @@ sb_handle_individual_textfield() {
   ; Autosize columns
   LV_ModifyCol()
 
-  ; if matched_files.Length() = 1
-  ; {
-  ;   LV_GetText(RowText, 1, 3)
-  ;   ToolTip %RowText%
-  ;   sb_play_sound(A_ScriptDir . "\sounds\" . RowText . ".mp3")
-  ;   return
-  ; }
+  if(sb_button_pressed = true)
+  {
+    sb_button_pressed := false
+
+    if(matched_files.Length() = 1)
+    {
+      LV_GetText(RowText, 1, 3)
+      sb_play_sound(A_ScriptDir . "\sounds\" . RowText . ".mp3")
+    }
+  }
 }
 
 ;----------------------------------------------------
@@ -351,6 +373,24 @@ sb_get_file_name(file){
   file_name := file_name_split[1]
   return file_name
 }
+
+;----------------------------------------------------
+;;;   Assists with submitting textfield on enter
+;----------------------------------------------------
+sb_handle_user_input_on_enter() {
+  sb_button_pressed := true
+  if(sb_which_field_focused = "individual")
+  {
+    sb_handle_individual_textfield()
+    return
+  }
+  else
+  {
+    sb_handle_category_textfield()
+    return
+  }
+}
+
 ;----------------------------------------------------
 ;;;   Plays a random sound from a provided category
 ;----------------------------------------------------
