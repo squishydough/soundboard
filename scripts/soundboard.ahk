@@ -145,6 +145,7 @@ sb_handle_category_textfield() {
 
   ; set that this field is focused
   sb_which_field_focused := "category"
+
   ; Set focus on correct listview
   Gui, ListView, SysListView321
 
@@ -220,8 +221,9 @@ sb_handle_category_listview() {
 sb_handle_individual_textfield() {
   Gui, Submit, NoHide
 
-  ;Note that this field is focused
+  ; Note that this field is focused
   sb_which_field_focused := "individual"
+
   ; Set focus on correct listview
   Gui, ListView, SysListView322
 
@@ -236,11 +238,10 @@ sb_handle_individual_textfield() {
 
   For index, file in files
   {
-    file_name := sb_get_file_name(file)
     valid_file := true
     For j, slug in user_input_slugs
     {
-      if !InStr(file_name, slug)
+      if !InStr(file, slug)
       {
         valid_file := false
         continue
@@ -261,8 +262,7 @@ sb_handle_individual_textfield() {
   For index, file in matched_files
   {
     ; remove categories from file name
-    file_name_split := StrSplit(file, "[")
-    file_name_string := file_name_split[1]
+    file_name := sb_get_file_name(file)
     ; get all categories for current file
     file_categories := sb_get_file_categories(file)
     ; Convert file_categories array into a string
@@ -276,7 +276,7 @@ sb_handle_individual_textfield() {
     ; Purge ] from string
     file_categories_string := StrReplace(file_categories_string, "]","")
     ; Add row to listview
-    LV_Add("", file_name_string, file_categories_string, file)
+    LV_Add("", file_name, file_categories_string, file)
   }
   ; Autosize columns
   LV_ModifyCol()
