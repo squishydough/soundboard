@@ -66,12 +66,13 @@ sb_gui_create() {
   Gui, Add, Text, %gui_control_options%, Random Sound From Category
   Gui, Add, Text, %gui_control_options% x16 y208, Specific Sound
   Gui, Font, s10, Segoe UI
-  Gui, Add, Edit, %gui_control_options% x16 y40 vsb_user_category_text gsb_handle_category_textfield
+  Gui, Add, Edit, %gui_control_options% x16 y40 vsb_user_category_text gsb_handle_category_textfield -WantReturn
   Gui, Add, Edit, %gui_control_options% x16 y232 vsb_user_individual_text gsb_handle_individual_textfield
+  Gui, Add, Button, x-10 y-10 w1 h1 gsb_handle_category_textfield
   Gui, Font, s09, Segoe UI
   Gui, Add, ListView, %gui_control_options% x16 y72 AltSubmit gsb_handle_category_listview, Category
   Gui, Add, ListView, %gui_control_options% x16 y264 AltSubmit h300 gsb_handle_individual_listview, Name | Categories | File Name
-  Gui, Add, Button, Default w80 gsb_stop_sound, Stop Sound
+  Gui, Add, Button, w80 gsb_stop_sound, Stop Sound
 
   ; Add each category to the category listview  
   Gui, ListView, SysListView321
@@ -175,11 +176,11 @@ sb_handle_category_textfield() {
   ; Autosize columns
   LV_ModifyCol()
 
-  if matched_categories.Length() = 1
-  {
-    LV_GetText(RowText, 1)
-    sb_play_random_sound(RowText)
-  }
+  ; if matched_categories.Length() = 1
+  ; {
+  ;   LV_GetText(RowText, 1)
+  ;   sb_play_random_sound(RowText)
+  ; }
 }
 
 ;----------------------------------------------------
@@ -261,13 +262,13 @@ sb_handle_individual_textfield() {
   ; Autosize columns
   LV_ModifyCol()
 
-  if matched_files.Length() = 1
-  {
-    LV_GetText(RowText, 1, 3)
-    ToolTip %RowText%
-    sb_play_sound(A_ScriptDir . "\sounds\" . RowText . ".mp3")
-    return
-  }
+  ; if matched_files.Length() = 1
+  ; {
+  ;   LV_GetText(RowText, 1, 3)
+  ;   ToolTip %RowText%
+  ;   sb_play_sound(A_ScriptDir . "\sounds\" . RowText . ".mp3")
+  ;   return
+  ; }
 }
 
 ;----------------------------------------------------
