@@ -18,7 +18,7 @@ This repo has a `/sounds` folder with a couple of sounds to get you started.  Th
 ## Using the script
 The base requirements to use the script require installation of both [AutoHotKey](https://www.autohotkey.com) and [VLC Media Player](https://www.videolan.org/).  If you want others to hear your sounds when you play them, you will have to configure some additional software.  [I wrote an article detailing how to do this that you should check out!](https://joshpayette.dev/posts/create-your-own-soundboard)
 
-To start using the script, double-click `Squishy.ahk` in the main folder.  This starts the script, which will listen for you to press `Caps Lock + Spacebar`.  **Note: By default, Caps Lock will not work while the script is working.  You can press `Alt + CapsLock` to toggle it on and off.**
+To start using the script, double-click `Soundboard.ahk` in the main folder.  This starts the script, which will listen for you to press `Caps Lock + Spacebar`.  **Note: By default, Caps Lock will not work while the script is working.  You can press `Alt + CapsLock` to toggle it on and off.**
 
 Once you press `Caps Lock + Spacebar`, you should be looking at the soundboard GUI.  If you are not, try the key combo again!
 
