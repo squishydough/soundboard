@@ -25,9 +25,14 @@ main_gui_autoexecute:
 ;-------------------------------------------------------------------------------
 CapsLock & Space::
   ; If the GUI is already open, close it.
-  if main_gui_state != closed
+  ; if main_gui_state != closed
+  ; {
+  ;   main_gui_destroy()
+  ;   return
+  ; }
+  if sb_gui_state != closed
   {
-    main_gui_destroy()
+    sb_gui_destroy()
     return
   }
   sb_gui_create()
@@ -47,7 +52,8 @@ CapsLock & Space::
 ;-------------------------------------------------------------------------------
 ; Automatically triggered on Escape key:
 GuiEscape:
-    main_gui_destroy()
+    ; main_gui_destroy()
+    sb_gui_destroy()
     return
 
 ; Allow normal CapsLock functionality to be toggled by Alt+CapsLock:
@@ -70,7 +76,8 @@ main_handle_user_input:
   ; Reload this script
   if main_user_input = rel
   {
-    main_gui_destroy()
+    ; main_gui_destroy()
+    sb_gui_destroy()
     Reload
   }
   ; Stop currently playing sound
