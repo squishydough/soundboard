@@ -13,7 +13,7 @@ SetCapsLockState, AlwaysOff
 ; section in a function or subroutine which is then
 ; executed below.
 ;-------------------------------------------------------
-Gosub sb_gui_autoexecute
+Gosub gui_autoexecute
 ;-------------------------------------------------------
 ; END AUTO EXECUTE SECTION
 return

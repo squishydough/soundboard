@@ -1,13 +1,13 @@
-﻿global sb_gui_state = closed
+﻿global gui_state = closed
 ; category textfield user input
-global sb_user_category_text := ""
+global user_category_text := ""
 ; individual file textfield user input
-global sb_user_individual_text := ""
+global user_individual_text := ""
 ; tracks which filter field the user is typing in
 ; this helps with 
-global sb_which_field_focused := ""
-global sb_button_pressed := false
-global sb_command_choice
+global which_field_focused := ""
+global button_pressed := false
+global command_choice
 ; The pid of the vlc instance - used for stopping sounds
 global vlc_pid := ""
 ; Path to the VLC executable
@@ -18,7 +18,7 @@ global vlc_audio_out := ""
 ;----------------------------------------------------
 ;;;   Sets defaults for GUI
 ;----------------------------------------------------
-sb_gui_autoexecute:
+gui_autoexecute:
   ; Tomorrow Night Color Definitions:
   cBackground := "c" . "1d1f21"
   cCurrentLine := "c" . "282a2e"
@@ -35,21 +35,21 @@ sb_gui_autoexecute:
   ; -E0x200 removes border around Edit controls
   gui_control_options := "xm w220 " . cForeground . " -E0x200"
   ; Initialize variable to keep track of the state of the GUI
-  sb_gui_state = closed
+  gui_state = closed
   ; Initialize other state vars
-  sb_button_pressed := false
+  button_pressed := false
   return
 
 ;-------------------------------------------------------------------------------
 ; HotKeYS
 ;-------------------------------------------------------------------------------
 CapsLock & Space::
-  sb_gui_create()
+  gui_create()
   return
 
 ; Automatically triggered on Escape key:
 GuiEscape:
-  sb_gui_destroy()
+  gui_destroy()
   return
 
 ; Allow normal CapsLock functionality to be toggled by Alt+CapsLock:
@@ -68,13 +68,13 @@ GuiEscape:
 ;----------------------------------------------------
 ;;;   Creates new instance of soundboard GUI
 ;----------------------------------------------------
-sb_gui_create() {
-  if sb_gui_state != closed
+gui_create() {
+  if gui_state != closed
   {
-    sb_gui_destroy()
+    gui_destroy()
     return
   }
-  sb_gui_state = open 
+  gui_state = open 
  
   ; Tomorrow Night Color Definitions:
   cBackground := "c" . "1d1f21"
@@ -98,19 +98,20 @@ sb_gui_create() {
   Gui, Font, s11, Segoe UI
   Gui, Add, Text, %gui_control_options%, Random Sound From Category
   Gui, Add, Text, %gui_control_options% x16 y208, Specific Sound
+  Gui, Add, Text, -E0x500 x16 y572 %cForeground%, Other Commands:
   Gui, Font, s10, Segoe UI
-  Gui, Add, Edit, %gui_control_options% x16 y40 vsb_user_category_text gsb_handle_category_textfield -WantReturn
-  Gui, Add, Edit, %gui_control_options% x16 y232 vsb_user_individual_text gsb_handle_individual_textfield
-  Gui, Add, Button, w80 gsb_stop_sound x456 y6, Stop Sound
-  Gui, Add, DropDownList, -E0x500 x16 y572 vsb_command_choice gsb_handle_command_dropdown, ---||Clear Clipboard|Reload
-  Gui, Add, Button, Default x-10 y-10 w1 h1 gsb_handle_user_input_on_enter
+  Gui, Add, Edit, %gui_control_options% x16 y40 vuser_category_text ghandle_category_textfield -WantReturn
+  Gui, Add, Edit, %gui_control_options% x16 y232 vuser_individual_text ghandle_individual_textfield
+  Gui, Add, Button, w80 gstop_sound x456 y6, Stop Sound
+  Gui, Add, DropDownList, -E0x500 %cForeground% x148 y572 vcommand_choice ghandle_command_dropdown, ---||Clear Clipboard|Reload
+  Gui, Add, Button, Default x-10 y-10 w1 h1 ghandle_user_input_on_enter
   Gui, Font, s09, Segoe UI
-  Gui, Add, ListView, %gui_control_options% x16 y72 AltSubmit gsb_handle_category_listview, Category
-  Gui, Add, ListView, %gui_control_options% x16 y264 AltSubmit h300 gsb_handle_individual_listview, Name | Categories | File Name
+  Gui, Add, ListView, %gui_control_options% x16 y72 AltSubmit ghandle_category_listview, Category
+  Gui, Add, ListView, %gui_control_options% x16 y264 AltSubmit h300 ghandle_individual_listview, Name | Categories | File Name
 
   ; Add each category to the category listview  
   Gui, ListView, SysListView321
-  categories := sb_get_all_categories()
+  categories := get_all_categories()
   For index, category in categories
   {
 
@@ -121,7 +122,7 @@ sb_gui_create() {
 
   ; Add each file to the files listview
   Gui, ListView, SysListView322
-  files := sb_get_files()
+  files := get_files()
   ; Add each file to the listview
   For index, file in files
   {
@@ -129,7 +130,7 @@ sb_gui_create() {
     file_name_split := StrSplit(file, "[")
     file_name_string := file_name_split[1]
     ; get all categories for current file
-    file_categories := sb_get_file_categories(file)
+    file_categories := get_file_categories(file)
     ; Convert file_categories array into a string
     file_categories_string := ""
     For index2, file_category in file_categories
@@ -152,8 +153,8 @@ sb_gui_create() {
 ;;;   Destroys the soundboard GUI
 ;----------------------------------------------------
 #WinActivateForce
-sb_gui_destroy() {
-  sb_gui_state = closed
+gui_destroy() {
+  gui_state = closed
   ; Hide GUI
   Gui, Destroy
   ; Remove tooltip
@@ -162,17 +163,17 @@ sb_gui_destroy() {
   WinActivate
 }
 
-sb_handle_command_dropdown(){
-  GuiControlGet, selected_command,,sb_command_choice
+handle_command_dropdown(){
+  GuiControlGet, selected_command,,command_choice
   
   if selected_command = Clear Clipboard
   {
     Run, % A_ScriptDir . "\scripts\clear-clipboard.bat"
-    sb_gui_destroy()
+    gui_destroy()
   }
   else if selected_command = Reload
   {
-    sb_gui_destroy()
+    gui_destroy()
     Reload
   }
 }
@@ -180,23 +181,23 @@ sb_handle_command_dropdown(){
 ;----------------------------------------------------
 ;;;   Handles the textbox for sound categories
 ;----------------------------------------------------
-sb_handle_category_textfield() {
+handle_category_textfield() {
   Gui, Submit, NoHide
 
   ; set that this field is focused
-  sb_which_field_focused := "category"
+  which_field_focused := "category"
 
   ; Set focus on correct listview
   Gui, ListView, SysListView321
 
   ; Split the user text apart at spaces so that 
   ; words don't have to be next to each other to be found
-  user_input_slugs := StrSplit(sb_user_category_text, " ")
+  user_input_slugs := StrSplit(user_category_text, " ")
 
   ; Array of categories that match the user slugs
   matched_categories := []
 
-  categories := sb_get_all_categories()
+  categories := get_all_categories()
 
   For index, category in categories
   {
@@ -228,14 +229,14 @@ sb_handle_category_textfield() {
   ; Autosize columns
   LV_ModifyCol()
 
-  if(sb_button_pressed = true)
+  if(button_pressed = true)
   {
-    sb_button_pressed := false
+    button_pressed := false
 
     if(matched_categories.Length() = 1)
     {
       LV_GetText(RowText, 1)
-      sb_play_random_sound(RowText)
+      play_random_sound(RowText)
     }
   }
 
@@ -244,13 +245,13 @@ sb_handle_category_textfield() {
 ;----------------------------------------------------
 ;;;   Handles the listview for sound categories
 ;----------------------------------------------------
-sb_handle_category_listview() {
+handle_category_listview() {
   ; Force LV commands to use the appropriate listview
   Gui, ListView, SysListView321
   if (A_GuiEvent = "DoubleClick")
   {
     LV_GetText(RowText, A_EventInfo)
-    sb_play_random_sound(RowText)
+    play_random_sound(RowText)
     return
   }
 }
@@ -258,23 +259,23 @@ sb_handle_category_listview() {
 ;----------------------------------------------------
 ;;;   Handles the textfield for the individual sounds
 ;----------------------------------------------------
-sb_handle_individual_textfield() {
+handle_individual_textfield() {
   Gui, Submit, NoHide
 
   ; Note that this field is focused
-  sb_which_field_focused := "individual"
+  which_field_focused := "individual"
 
   ; Set focus on correct listview
   Gui, ListView, SysListView322
 
   ; Split the user text apart at spaces so that 
   ; words don't have to be next to each other to be found
-  user_input_slugs := StrSplit(sb_user_individual_text, " ")
+  user_input_slugs := StrSplit(user_individual_text, " ")
 
   ; Array of files that match the user slugs
   matched_files := []
 
-  files := sb_get_files()
+  files := get_files()
 
   For index, file in files
   {
@@ -302,9 +303,9 @@ sb_handle_individual_textfield() {
   For index, file in matched_files
   {
     ; remove categories from file name
-    file_name := sb_get_file_name(file)
+    file_name := get_file_name(file)
     ; get all categories for current file
-    file_categories := sb_get_file_categories(file)
+    file_categories := get_file_categories(file)
     ; Convert file_categories array into a string
     file_categories_string := ""
     For index2, file_category in file_categories  
@@ -321,14 +322,14 @@ sb_handle_individual_textfield() {
   ; Autosize columns
   LV_ModifyCol()
 
-  if(sb_button_pressed = true)
+  if(button_pressed = true)
   {
-    sb_button_pressed := false
+    button_pressed := false
 
     if(matched_files.Length() = 1)
     {
       LV_GetText(RowText, 1, 3)
-      sb_play_sound(A_ScriptDir . "\sounds\" . RowText . ".mp3")
+      play_sound(A_ScriptDir . "\sounds\" . RowText . ".mp3")
     }
   }
 }
@@ -336,19 +337,19 @@ sb_handle_individual_textfield() {
 ;----------------------------------------------------
 ;;;   Handles the listview for the individual sounds
 ;----------------------------------------------------
-sb_handle_individual_listview() {
+handle_individual_listview() {
   Gui, ListView, SysListView322
   if (A_GuiEvent = "DoubleClick")
   {
     LV_GetText(RowText, A_EventInfo, 3)
-    sb_play_sound(A_ScriptDir . "\sounds\" . RowText . ".mp3")
+    play_sound(A_ScriptDir . "\sounds\" . RowText . ".mp3")
   }
 }
 
 ;----------------------------------------------------
 ;;;   Returns a list of all mp3 files in /sounds folder
 ;----------------------------------------------------
-sb_get_files() {
+get_files() {
   local sounds := {}
   Loop Files, sounds\*.mp3 
   {
@@ -361,11 +362,11 @@ sb_get_files() {
 ;----------------------------------------------------
 ;;;   Returns a list of all folders in /sounds
 ;----------------------------------------------------
-sb_get_all_categories() {
+get_all_categories() {
   local categories := []
   Loop Files, sounds\*.mp3 
   {
-    file_categories := sb_get_file_categories(A_LoopFileName)
+    file_categories := get_file_categories(A_LoopFileName)
     if(file_categories.Length() = 0) 
     {
       continue
@@ -385,7 +386,7 @@ sb_get_all_categories() {
 ;;;     * Categories should come at the end of the file name.
 ;;;     ex. big moustache [naked gun, random].mp3
 ;----------------------------------------------------
-sb_get_file_categories(file_name) {
+get_file_categories(file_name) {
   local categories := []
   local file_categories := StrSplit(file_name, "[")
   if(file_categories.Length() <= 1) 
@@ -408,7 +409,7 @@ sb_get_file_categories(file_name) {
 ;----------------------------------------------------
 ;;;   Removes categories from a file name
 ;----------------------------------------------------
-sb_get_file_name(file){
+get_file_name(file){
   file_name_split := StrSplit(file, "[")
   file_name := file_name_split[1]
   return file_name
@@ -417,16 +418,16 @@ sb_get_file_name(file){
 ;----------------------------------------------------
 ;;;   Assists with submitting textfield on enter
 ;----------------------------------------------------
-sb_handle_user_input_on_enter() {
-  sb_button_pressed := true
-  if(sb_which_field_focused = "individual")
+handle_user_input_on_enter() {
+  button_pressed := true
+  if(which_field_focused = "individual")
   {
-    sb_handle_individual_textfield()
+    handle_individual_textfield()
     return
   }
   else
   {
-    sb_handle_category_textfield()
+    handle_category_textfield()
     return
   }
 }
@@ -434,12 +435,12 @@ sb_handle_user_input_on_enter() {
 ;----------------------------------------------------
 ;;;   Plays a random sound from a provided category
 ;----------------------------------------------------
-sb_play_random_sound(requested_category) {
+play_random_sound(requested_category) {
   files := []
   ; Get a list of all files in the category folder
   Loop Files, sounds\*.mp3 
   {
-    file_categories := sb_get_file_categories(A_LoopFileName)
+    file_categories := get_file_categories(A_LoopFileName)
     For i, category In file_categories 
     {
       if (category = requested_category) 
@@ -465,29 +466,29 @@ sb_play_random_sound(requested_category) {
   if(files[randomIndex] != "") 
   {
     file_path := A_ScriptDir . "\sounds\" . files[randomIndex]
-    sb_play_sound(file_path)
+    play_sound(file_path)
   }
 }
 
 ;----------------------------------------------------
 ;;;   Plays sound provided by file_path
 ;----------------------------------------------------
-sb_play_sound(file_path) {
+play_sound(file_path) {
   vlc_path := "C:\Program Files\VideoLAN\VLC\vlc.exe"
   vlc_audio_out := "Music (VB-Audio Cable A) ($1,$64)"
   if !FileExist(file_path) 
   {
     return
   }
-  sb_stop_sound()
+  stop_sound()
   Run "%vlc_path%" --aout=waveout --waveout-audio-device="%vlc_audio_out%" --play-and-exit --qt-start-minimized --qt-system-tray "%file_path%",,,vlc_pid
-  sb_gui_destroy()
+  gui_destroy()
 }
 
 ;----------------------------------------------------
 ;;;   Stops the currently playing sound
 ;----------------------------------------------------
-sb_stop_sound() {
+stop_sound() {
   Process, Close, %vlc_pid%
-  sb_gui_destroy()
+  gui_destroy()
 }
