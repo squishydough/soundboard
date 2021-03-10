@@ -13,14 +13,11 @@ SetCapsLockState, AlwaysOff
 ; section in a function or subroutine which is then
 ; executed below.
 ;-------------------------------------------------------
-Gosub main_gui_autoexecute
 Gosub sb_gui_autoexecute
 ;-------------------------------------------------------
 ; END AUTO EXECUTE SECTION
 return
 ;-------------------------------------------------------
-; Load the main GUI
-#Include %A_ScriptDir%\scripts\main.ahk
 ; Load the soundboard GUI
 #Include %A_ScriptDir%\scripts\soundboard.ahk
 ; General settings

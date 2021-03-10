@@ -1,4 +1,4 @@
-﻿global sb_gui_state := closed
+﻿global sb_gui_state = closed
 ; category textfield user input
 global sb_user_category_text := ""
 ; individual file textfield user input
@@ -34,9 +34,34 @@ sb_gui_autoexecute:
   ; -E0x200 removes border around Edit controls
   gui_control_options := "xm w220 " . cForeground . " -E0x200"
   ; Initialize variable to keep track of the state of the GUI
-  sb_gui_state := closed
+  sb_gui_state = closed
   ; Initialize other state vars
   sb_button_pressed := false
+  return
+
+;-------------------------------------------------------------------------------
+; HotKeYS
+;-------------------------------------------------------------------------------
+CapsLock & Space::
+  sb_gui_create()
+  return
+
+; Automatically triggered on Escape key:
+GuiEscape:
+  sb_gui_destroy()
+  return
+
+; Allow normal CapsLock functionality to be toggled by Alt+CapsLock:
+!CapsLock::
+  GetKeyState, capsstate, CapsLock, T ;(T indicates a Toggle. capsstate is an arbitrary varible name)
+  if capsstate = U 
+  {
+    SetCapsLockState, AlwaysOn
+  }
+  else 
+  {
+    SetCapsLockState, AlwaysOff
+  }
   return
 
 ;----------------------------------------------------
@@ -49,8 +74,7 @@ sb_gui_create() {
     return
   }
   sb_gui_state = open 
-  main_gui_destroy()
-
+ 
   ; Tomorrow Night Color Definitions:
   cBackground := "c" . "1d1f21"
   cCurrentLine := "c" . "282a2e"
