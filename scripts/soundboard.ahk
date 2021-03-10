@@ -7,6 +7,7 @@ global sb_user_individual_text := ""
 ; this helps with 
 global sb_which_field_focused := ""
 global sb_button_pressed := false
+global sb_command_choice
 ; The pid of the vlc instance - used for stopping sounds
 global vlc_pid := ""
 ; Path to the VLC executable
@@ -101,6 +102,7 @@ sb_gui_create() {
   Gui, Add, Edit, %gui_control_options% x16 y40 vsb_user_category_text gsb_handle_category_textfield -WantReturn
   Gui, Add, Edit, %gui_control_options% x16 y232 vsb_user_individual_text gsb_handle_individual_textfield
   Gui, Add, Button, w80 gsb_stop_sound x456 y6, Stop Sound
+  Gui, Add, DropDownList, -E0x500 x16 y572 vsb_command_choice gsb_handle_command_dropdown, ---||Clear Clipboard|Reload
   Gui, Add, Button, Default x-10 y-10 w1 h1 gsb_handle_user_input_on_enter
   Gui, Font, s09, Segoe UI
   Gui, Add, ListView, %gui_control_options% x16 y72 AltSubmit gsb_handle_category_listview, Category
@@ -158,6 +160,21 @@ sb_gui_destroy() {
   ToolTip
   ; Bring focus back to another window found on the desktop
   WinActivate
+}
+
+sb_handle_command_dropdown(){
+  GuiControlGet, selected_command,,sb_command_choice
+  
+  if selected_command = Clear Clipboard
+  {
+    Run, % A_ScriptDir . "\scripts\clear-clipboard.bat"
+    sb_gui_destroy()
+  }
+  else if selected_command = Reload
+  {
+    sb_gui_destroy()
+    Reload
+  }
 }
 
 ;----------------------------------------------------
