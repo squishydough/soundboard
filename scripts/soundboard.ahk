@@ -94,7 +94,7 @@ gui_create() {
 
   Gui, Margin, 16, 16
   Gui, Color, 1d1f21, 282a2e
-  Gui, +AlwaysOnTop -SysMenu +ToolWindow -caption +Border
+  Gui, +AlwaysOnTop
   Gui, Font, s11, Segoe UI
   Gui, Add, Text, %gui_control_options%, Random Sound From Category
   Gui, Add, Text, %gui_control_options% x16 y208, Specific Sound
