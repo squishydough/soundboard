@@ -22,8 +22,6 @@ To start using the script, double-click `Soundboard.ahk` in the main folder.  On
 
 **Note: By default, Caps Lock will not work while the script is working.  You can press `Alt + CapsLock` to toggle it on and off.**
 
-Once you press `Caps Lock + Spacebar`, you should be looking at the soundboard GUI.  If you are not, try the key combo again!
-
 ## Using the soundboard GUI
 Use the textbox above each list to filter the items in the list.  You can either double-click an item in the list, or press `Enter` in the textbox to play the sound.  **Note: Pressing `Enter` in the textbox only works if there is one item remaining in the list.**
 
