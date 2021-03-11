@@ -1,4 +1,4 @@
-﻿; set to pinned or hidden, used for toggling window position
+; set to pinned or hidden, used for toggling window position
 global gui_state = pinned
 ; category textfield user input
 global user_category_text := ""
@@ -462,6 +462,8 @@ play_sound(file_path) {
 ;;;   Stops the currently playing sound
 ;----------------------------------------------------
 stop_sound() {
+  oTrayInfo := TrayIcon_GetInfo("vlc.exe")
+  TrayIcon_Remove(oTrayInfo[1].hWnd, oTrayInfo[1].uID)
   Process, Close, %vlc_pid%
   gui_toggle()
 } 
