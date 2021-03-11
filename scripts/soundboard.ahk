@@ -7,8 +7,10 @@ global user_individual_text := ""
 ; tracks which filter field the user is typing in
 ; this helps with 
 global which_field_focused := ""
+; tracks whether enter was pressed in a filter field
 global button_pressed := false
-global command_choice
+; tracks which command selected from the dropdown menu
+global command_choice := ""
 ; The pid of the vlc instance - used for stopping sounds
 global vlc_pid := ""
 ; Path to the VLC executable
@@ -37,6 +39,11 @@ CapsLock & Space::
 ;;;   Creates new instance of soundboard GUI
 ;----------------------------------------------------
 gui_create() {
+  ; Initialize state vars
+  button_pressed := false
+  gui_state = pinned
+  vlc_path := "C:\Program Files\VideoLAN\VLC\vlc.exe"
+  vlc_audio_out := "Music (VB-Audio Cable A) ($1,$64)"
   ; Tomorrow Night Color Definitions:
   cBackground := "c" . "1d1f21"
   cCurrentLine := "c" . "282a2e"
@@ -52,9 +59,6 @@ gui_create() {
   cPurple := "c" . "b294bb"
   ; -E0x200 removes border around Edit controls
   gui_control_options := "xm w520 " . cForeground . " -E0x500"
-  ; Initialize other state vars
-  button_pressed := false
-  gui_state = pinned
 
   Gui, Margin, 16, 16
   Gui, +AlwaysOnTop
@@ -72,7 +76,6 @@ gui_create() {
   Gui, Font, s09, Segoe UI
   Gui, Add, ListView, %gui_control_options% x16 y72 AltSubmit ghandle_category_listview, Category
   Gui, Add, ListView, %gui_control_options% x16 y264 AltSubmit h300 ghandle_individual_listview, Name | Categories | File Name
-  Gui, Show, h624, Squishy's Soundboard
 
   ; Add each category to the category listview  
   Gui, ListView, SysListView321
@@ -111,6 +114,8 @@ gui_create() {
   }
   ; Autosize each column
   LV_ModifyCol()
+
+  Gui, Show, h624, Squishy's Soundboard
 }
 
 ;----------------------------------------------------
@@ -445,8 +450,6 @@ play_random_sound(requested_category) {
 ;;;   Plays sound provided by file_path
 ;----------------------------------------------------
 play_sound(file_path) {
-  vlc_path := "C:\Program Files\VideoLAN\VLC\vlc.exe"
-  vlc_audio_out := "Music (VB-Audio Cable A) ($1,$64)"
   if !FileExist(file_path) 
   {
     return
