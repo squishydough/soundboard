@@ -1,4 +1,5 @@
-﻿global gui_state = closed
+﻿; set to pinned or hidden, used for toggling window position
+global gui_state = pinned
 ; category textfield user input
 global user_category_text := ""
 ; individual file textfield user input
@@ -15,41 +16,8 @@ global vlc_path := ""
 ; The waveout device as listed in VLC
 global vlc_audio_out := ""
 
-;----------------------------------------------------
-;;;   Sets defaults for GUI
-;----------------------------------------------------
-gui_autoexecute:
-  ; Tomorrow Night Color Definitions:
-  cBackground := "c" . "1d1f21"
-  cCurrentLine := "c" . "282a2e"
-  cSelection := "c" . "373b41"
-  cForeground := "c" . "c5c8c6"
-  cComment := "c" . "969896"
-  cRed := "c" . "cc6666"
-  cOrange := "c" . "de935f"
-  cYellow := "c" . "f0c674"
-  cGreen := "c" . "b5bd68"
-  cAqua := "c" . "8abeb7"
-  cBlue := "c" . "81a2be"
-  cPurple := "c" . "b294bb"
-  ; -E0x200 removes border around Edit controls
-  gui_control_options := "xm w220 " . cForeground . " -E0x200"
-  ; Initialize variable to keep track of the state of the GUI
-  gui_state = closed
-  ; Initialize other state vars
-  button_pressed := false
-  return
-
-;-------------------------------------------------------------------------------
-; HotKeYS
-;-------------------------------------------------------------------------------
 CapsLock & Space::
-  gui_create()
-  return
-
-; Automatically triggered on Escape key:
-GuiEscape:
-  gui_destroy()
+  gui_toggle()
   return
 
 ; Allow normal CapsLock functionality to be toggled by Alt+CapsLock:
@@ -69,13 +37,6 @@ GuiEscape:
 ;;;   Creates new instance of soundboard GUI
 ;----------------------------------------------------
 gui_create() {
-  if gui_state != closed
-  {
-    gui_destroy()
-    return
-  }
-  gui_state = open 
- 
   ; Tomorrow Night Color Definitions:
   cBackground := "c" . "1d1f21"
   cCurrentLine := "c" . "282a2e"
@@ -91,10 +52,13 @@ gui_create() {
   cPurple := "c" . "b294bb"
   ; -E0x200 removes border around Edit controls
   gui_control_options := "xm w520 " . cForeground . " -E0x500"
+  ; Initialize other state vars
+  button_pressed := false
+  gui_state = pinned
 
   Gui, Margin, 16, 16
-  Gui, Color, 1d1f21, 282a2e
   Gui, +AlwaysOnTop
+  Gui, Color, 1d1f21, 282a2e
   Gui, Font, s11, Segoe UI
   Gui, Add, Text, %gui_control_options%, Random Sound From Category
   Gui, Add, Text, %gui_control_options% x16 y208, Specific Sound
@@ -108,6 +72,7 @@ gui_create() {
   Gui, Font, s09, Segoe UI
   Gui, Add, ListView, %gui_control_options% x16 y72 AltSubmit ghandle_category_listview, Category
   Gui, Add, ListView, %gui_control_options% x16 y264 AltSubmit h300 ghandle_individual_listview, Name | Categories | File Name
+  Gui, Show, h624, Squishy's Soundboard
 
   ; Add each category to the category listview  
   Gui, ListView, SysListView321
@@ -146,34 +111,40 @@ gui_create() {
   }
   ; Autosize each column
   LV_ModifyCol()
-
-  Gui, Show, h624, sbGUI
-}
-;----------------------------------------------------
-;;;   Destroys the soundboard GUI
-;----------------------------------------------------
-#WinActivateForce
-gui_destroy() {
-  gui_state = closed
-  ; Hide GUI
-  Gui, Destroy
-  ; Remove tooltip
-  ToolTip
-  ; Bring focus back to another window found on the desktop
-  WinActivate
 }
 
+;----------------------------------------------------
+;;;   Shows or hides the GUI
+;----------------------------------------------------
+gui_toggle() {
+  if gui_state = pinned 
+  {
+    gui_state = hidden
+    Gui, -AlwaysOnTop
+    Gui, Minimize
+  }
+  else
+  {
+    gui_state = pinned
+    Gui, +AlwaysOnTop
+    Gui, Show
+  }
+}
+
+;----------------------------------------------------
+;;;   Handles a command being selected from dropdown
+;----------------------------------------------------
 handle_command_dropdown(){
   GuiControlGet, selected_command,,command_choice
   
   if selected_command = Clear Clipboard
   {
     Run, % A_ScriptDir . "\scripts\clear-clipboard.bat"
-    gui_destroy()
+    MsgBox,,Success!,Clipboard was successfully cleared!
   }
   else if selected_command = Reload
   {
-    gui_destroy()
+    Gui, Destroy
     Reload
   }
 }
@@ -482,7 +453,6 @@ play_sound(file_path) {
   }
   stop_sound()
   Run "%vlc_path%" --aout=waveout --waveout-audio-device="%vlc_audio_out%" --play-and-exit --qt-start-minimized --qt-system-tray "%file_path%",,,vlc_pid
-  gui_destroy()
 }
 
 ;----------------------------------------------------
@@ -490,5 +460,5 @@ play_sound(file_path) {
 ;----------------------------------------------------
 stop_sound() {
   Process, Close, %vlc_pid%
-  gui_destroy()
-}
+  gui_toggle()
+} 

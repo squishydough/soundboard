@@ -18,7 +18,9 @@ This repo has a `/sounds` folder with a couple of sounds to get you started.  Th
 ## Using the script
 The base requirements to use the script require installation of both [AutoHotKey](https://www.autohotkey.com) and [VLC Media Player](https://www.videolan.org/).  If you want others to hear your sounds when you play them, you will have to configure some additional software.  [I wrote an article detailing how to do this that you should check out!](https://joshpayette.dev/posts/create-your-own-soundboard)
 
-To start using the script, double-click `Soundboard.ahk` in the main folder.  This starts the script, which will listen for you to press `Caps Lock + Spacebar`.  **Note: By default, Caps Lock will not work while the script is working.  You can press `Alt + CapsLock` to toggle it on and off.**
+To start using the script, double-click `Soundboard.ahk` in the main folder.  Once the script is running, you can press `CapsLock + Spacebar` to minimize/maximize the gui, making it quick to swap to/from a game or other window.
+
+**Note: By default, Caps Lock will not work while the script is working.  You can press `Alt + CapsLock` to toggle it on and off.**
 
 Once you press `Caps Lock + Spacebar`, you should be looking at the soundboard GUI.  If you are not, try the key combo again!
 
@@ -26,7 +28,7 @@ Once you press `Caps Lock + Spacebar`, you should be looking at the soundboard G
 Use the textbox above each list to filter the items in the list.  You can either double-click an item in the list, or press `Enter` in the textbox to play the sound.  **Note: Pressing `Enter` in the textbox only works if there is one item remaining in the list.**
 
 ## Adding sounds
-When I made this script, I wanted it to be very easy to add and organize your sounds without needing to do anything with the script.  In the project root, there is a sounds folder.  All mp3 files you add to this folder will automatically be brought into the script as soon as they are added.
+When I made this script, I wanted it to be very easy to add and organize your sounds without needing to do anything with the script.  In the project root, there is a sounds folder.  All mp3 files you add to this folder will automatically be brought into the script as soon as you reload the script.
 
 ### Naming the sounds
 Your file name should generally follow this structure: `search terms for file [category1, category2].mp3.`  The script will check each file name and take the comma-separated category names from with the `[]` square brackets.  The individual file names list is everything in the file name not enclosed in the square brackets.
