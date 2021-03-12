@@ -1,8 +1,8 @@
-; set to pinned or hidden, used for toggling window position
+﻿; set to pinned or hidden, used for toggling window position
 global gui_state = pinned
 ; category textfield user input
 global user_category_text := ""
-; individual file textfield user input
+; individual sound textfield user input
 global user_individual_text := ""
 ; tracks which filter field the user is typing in
 ; this helps with 
@@ -17,6 +17,13 @@ global vlc_pid := ""
 global vlc_path := ""
 ; The waveout device as listed in VLC
 global vlc_audio_out := ""
+; Tracks which sounds are unplaye for each category
+; Helps ensure that the same sound doesn't play back to back
+global unplayed_sounds := []
+; List of all sounds
+global sounds := []
+; List of all categories
+global categories := []
 
 CapsLock & Space::
   gui_toggle()
@@ -44,6 +51,10 @@ gui_create() {
   gui_state = pinned
   vlc_path := "C:\Program Files\VideoLAN\VLC\vlc.exe"
   vlc_audio_out := "Music (VB-Audio Cable A) ($1,$64)"
+  ; Initialize data
+  sounds := get_all_sounds()
+  categories := get_all_categories()
+  unplayed_sounds := []
   ; Tomorrow Night Color Definitions:
   cBackground := "c" . "1d1f21"
   cCurrentLine := "c" . "282a2e"
@@ -79,38 +90,35 @@ gui_create() {
 
   ; Add each category to the category listview  
   Gui, ListView, SysListView321
-  categories := get_all_categories()
   For index, category in categories
   {
-
     LV_Add("", category)
   }
   ; Autosize columns
   LV_ModifyCol() 
 
-  ; Add each file to the files listview
+  ; Add each sound to the sounds listview
   Gui, ListView, SysListView322
-  files := get_files()
-  ; Add each file to the listview
-  For index, file in files
+  sounds := get_all_sounds()
+  ; Add each sound to the listview
+  For index, sound in sounds
   {
-    ; remove categories from file name
-    file_name_split := StrSplit(file, "[")
-    file_name_string := file_name_split[1]
-    ; get all categories for current file
-    file_categories := get_file_categories(file)
-    ; Convert file_categories array into a string
-    file_categories_string := ""
-    For index2, file_category in file_categories
+    ; remove categories from sound name
+    sound_name := get_sound_name(sound)
+    ; get all categories for current sound
+    sound_categories := get_sound_categories(sound)
+    ; Convert sound_categories array into a string
+    sound_categories_string := ""
+    For index2, sound_category in sound_categories
     {
-      file_categories_string .= ", " . file_category
+      sound_categories_string .= ", " . sound_category
     }
     ; Purge leading comma from string
-    file_categories_string := StrReplace(file_categories_string, ",","",, Limit := 1)
+    sound_categories_string := StrReplace(sound_categories_string, ",","",, Limit := 1)
     ; Purge ] from string
-    file_categories_string := StrReplace(file_categories_string, "]","")
+    sound_categories_string := StrReplace(sound_categories_string, "]","")
     ; Add row to listview
-    LV_Add("", file_name_string, file_categories_string, file)
+    LV_Add("", sound_name, sound_categories_string, sound)
   }
   ; Autosize each column
   LV_ModifyCol()
@@ -248,52 +256,52 @@ handle_individual_textfield() {
   ; words don't have to be next to each other to be found
   user_input_slugs := StrSplit(user_individual_text, " ")
 
-  ; Array of files that match the user slugs
-  matched_files := []
+  ; Array of sounds that match the user slugs
+  matched_sounds := []
 
-  files := get_files()
+  sounds := get_all_sounds()
 
-  For index, file in files
+  For index, sound in sounds
   {
-    valid_file := true
+    valid_sound := true
     For j, slug in user_input_slugs
     {
-      if !InStr(file, slug)
+      if !InStr(sound, slug)
       {
-        valid_file := false
+        valid_sound := false
         continue
       }
     }
 
-    if(valid_file = false)
+    if(valid_sound = false)
     {
       continue
     }
     
-    matched_files.push(file)
+    matched_sounds.push(sound)
   }
 
   ; Remove all items
   LV_Delete()
   ; Add matched items only
-  For index, file in matched_files
+  For index, sound in matched_sounds
   {
-    ; remove categories from file name
-    file_name := get_file_name(file)
-    ; get all categories for current file
-    file_categories := get_file_categories(file)
-    ; Convert file_categories array into a string
-    file_categories_string := ""
-    For index2, file_category in file_categories  
+    ; remove categories from sound name
+    sound_name := get_sound_name(sound)
+    ; get all categories for current sound
+    sound_categories := get_sound_categories(sound)
+    ; Convert sound_categories array into a string
+    sound_categories_string := ""
+    For index2, sound_category in sound_categories  
     {
-      file_categories_string .= ", " . file_category
+      sound_categories_string .= ", " . sound_category
     }
     ; Purge leading comma from string
-    file_categories_string := StrReplace(file_categories_string, ",","",, Limit := 1)
+    sound_categories_string := StrReplace(sound_categories_string, ",","",, Limit := 1)
     ; Purge ] from string
-    file_categories_string := StrReplace(file_categories_string, "]","")
+    sound_categories_string := StrReplace(sound_categories_string, "]","")
     ; Add row to listview
-    LV_Add("", file_name, file_categories_string, file)
+    LV_Add("", sound_name, sound_categories_string, sound)
   }
   ; Autosize columns
   LV_ModifyCol()
@@ -302,7 +310,7 @@ handle_individual_textfield() {
   {
     button_pressed := false
 
-    if(matched_files.Length() = 1)
+    if(matched_sounds.Length() = 1)
     {
       LV_GetText(RowText, 1, 3)
       play_sound(A_ScriptDir . "\sounds\" . RowText . ".mp3")
@@ -323,75 +331,6 @@ handle_individual_listview() {
 }
 
 ;----------------------------------------------------
-;;;   Returns a list of all mp3 files in /sounds folder
-;----------------------------------------------------
-get_files() {
-  local sounds := {}
-  Loop Files, sounds\*.mp3 
-  {
-    sounds.push(StrReplace(A_LoopFileName, ".mp3", ""))
-  }
-
-  return unique(sounds)
-}
-
-;----------------------------------------------------
-;;;   Returns a list of all folders in /sounds
-;----------------------------------------------------
-get_all_categories() {
-  local categories := []
-  Loop Files, sounds\*.mp3 
-  {
-    file_categories := get_file_categories(A_LoopFileName)
-    if(file_categories.Length() = 0) 
-    {
-      continue
-    }
-    For i, category In file_categories 
-    {
-      categories.push(category)
-    }
-  }
-  return unique(categories)
-}
-
-;----------------------------------------------------
-;;;   Parses categories from a provided file_name
-;;;
-;;;     * Categories are enclosed in [] and separated by commas in file_name
-;;;     * Categories should come at the end of the file name.
-;;;     ex. big moustache [naked gun, random].mp3
-;----------------------------------------------------
-get_file_categories(file_name) {
-  local categories := []
-  local file_categories := StrSplit(file_name, "[")
-  if(file_categories.Length() <= 1) 
-  {
-    return ""
-  }
-  split_categories := StrSplit(file_categories[2], ",")
-  if(split_categories.Length() = 0) 
-  {
-    return ""
-  }
-  For i, category in split_categories 
-  {
-    category := Trim(StrReplace(category, "].mp3", ""))
-    categories.push(category)
-  }
-  return categories
-}
-
-;----------------------------------------------------
-;;;   Removes categories from a file name
-;----------------------------------------------------
-get_file_name(file){
-  file_name_split := StrSplit(file, "[")
-  file_name := file_name_split[1]
-  return file_name
-}
-
-;----------------------------------------------------
 ;;;   Assists with submitting textfield on enter
 ;----------------------------------------------------
 handle_user_input_on_enter() {
@@ -409,53 +348,146 @@ handle_user_input_on_enter() {
 }
 
 ;----------------------------------------------------
-;;;   Plays a random sound from a provided category
+;;;   Returns a list of all mp3 sounds in /sounds folder
 ;----------------------------------------------------
-play_random_sound(requested_category) {
-  files := []
-  ; Get a list of all files in the category folder
+get_all_sounds() {
+  local sounds := {}
   Loop Files, sounds\*.mp3 
   {
-    file_categories := get_file_categories(A_LoopFileName)
-    For i, category In file_categories 
+    sounds.push(StrReplace(A_LoopFileName, ".mp3", ""))
+  }
+
+  return unique(sounds)
+}
+
+;----------------------------------------------------
+;;;   Returns a list of all folders in /sounds
+;----------------------------------------------------
+get_all_categories() {
+  local categories := []
+  Loop Files, sounds\*.mp3 
+  {
+    sound_categories := get_sound_categories(A_LoopFileName)
+    if(sound_categories.Length() = 0) 
+    {
+      continue
+    }
+    For i, category In sound_categories 
+    {
+      categories.push(category)
+    }
+  }
+  return unique(categories)
+}
+
+;----------------------------------------------------
+;;;   Parses categories from a provided sound_name
+;;;
+;;;     * Categories are enclosed in [] and separated by commas in sound_name
+;;;     * Categories should come at the end of the sound name.
+;;;     ex. big moustache [naked gun, random].mp3
+;----------------------------------------------------
+get_sound_categories(sound_name) {
+  local categories := []
+  local sound_categories := StrSplit(sound_name, "[")
+  if(sound_categories.Length() <= 1) 
+  {
+    return ""
+  }
+  split_categories := StrSplit(sound_categories[2], ",")
+  if(split_categories.Length() = 0) 
+  {
+    return ""
+  }
+  For i, category in split_categories 
+  {
+    category := Trim(StrReplace(category, "].mp3", ""))
+    categories.push(category)
+  }
+  return categories
+}
+
+;----------------------------------------------------
+;;;   Removes categories from a sound name
+;----------------------------------------------------
+get_sound_name(sound){
+  sound_name_split := StrSplit(sound, "[")
+  sound_name := sound_name_split[1]
+  return sound_name
+}
+
+;----------------------------------------------------
+;;;   Removes categories from a sound name
+;----------------------------------------------------
+get_sounds_in_category(requested_category) {
+  category_sounds := []
+  ; get all sounds of the requested_category
+  Loop Files, sounds\*.mp3 
+  {
+    sound_categories := get_sound_categories(A_LoopFileName)
+    For i, category In sound_categories 
     {
       if (category = requested_category) 
       {
-        files.push(A_LoopFileName)
+        category_sounds.push(A_LoopFileName)
       }
     }
   }
-  if(files.length() = 0) 
+  return category_sounds
+}
+
+;----------------------------------------------------
+;;;   Plays a random sound from a provided category
+;----------------------------------------------------
+play_random_sound(category) {
+  category_sounds := get_sounds_in_category(category)
+
+  if(category_sounds.Length() = 1)
   {
-    return
+    random_index := 1
   }
-  ; If there is only one file for the category, just play it
-  if(files.length() = 1) 
+  else
   {
-    randomIndex := 1
-  } 
-  ; Pick a random file index and store in randomIndex
-  else 
-  {  
-    Random, randomIndex, 1, files.length()
+    if(unplayed_sounds[category].Length() = 0 || !unplayed_sounds[category])
+    {
+      unplayed_sounds[category] := []
+      For index in category_sounds 
+      {
+        unplayed_sounds[category].push(index)
+      }
+    }
+
+    ; If there is only one sound for the category, just play it
+    if(unplayed_sounds[category].Length() = 1) 
+    {
+      random_index := unplayed_sounds[category][1]
+      unplayed_sounds[category].RemoveAt(1)
+    } 
+    else 
+    {  
+      Random, rand, 1, unplayed_sounds[category].Length()
+      random_index := unplayed_sounds[category][rand] 
+      unplayed_sounds[category].remove(rand)
+    }
   }
-  if(files[randomIndex] != "") 
+
+  if(category_sounds[random_index] != "")
   {
-    file_path := A_ScriptDir . "\sounds\" . files[randomIndex]
-    play_sound(file_path)
+    sound_path := A_ScriptDir . "\sounds\" . category_sounds[random_index]
+    play_sound(sound_path)
   }
 }
 
 ;----------------------------------------------------
-;;;   Plays sound provided by file_path
+;;;   Plays sound provided by sound_path
 ;----------------------------------------------------
-play_sound(file_path) {
-  if !FileExist(file_path) 
+play_sound(sound_path) {
+  if !FileExist(sound_path) 
   {
     return
   }
   stop_sound()
-  Run "%vlc_path%" --aout=waveout --waveout-audio-device="%vlc_audio_out%" --play-and-exit --qt-start-minimized --qt-system-tray "%file_path%",,,vlc_pid
+  Run "%vlc_path%" --aout=waveout --waveout-audio-device="%vlc_audio_out%" --play-and-exit --qt-start-minimized --qt-system-tray "%sound_path%",,,vlc_pid
 }
 
 ;----------------------------------------------------
