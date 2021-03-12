@@ -369,14 +369,14 @@ get_all_sounds() {
 ;----------------------------------------------------
 get_all_categories() {
   local categories := []
-  Loop Files, sounds\*.mp3 
+  For i, sound in sounds
   {
-    sound_categories := get_sound_categories(A_LoopFileName)
+    sound_categories := get_sound_categories(sound)
     if(sound_categories.Length() = 0) 
     {
       continue
     }
-    For i, category In sound_categories 
+    For j, category In sound_categories 
     {
       categories.push(category)
     }
@@ -405,7 +405,7 @@ get_sound_categories(sound_name) {
   }
   For i, category in split_categories 
   {
-    category := Trim(StrReplace(category, "].mp3", ""))
+    category := Trim(StrReplace(category, "]", ""))
     categories.push(category)
   }
   return categories
@@ -425,15 +425,14 @@ get_sound_name(sound){
 ;----------------------------------------------------
 get_sounds_in_category(requested_category) {
   category_sounds := []
-  ; get all sounds of the requested_category
-  Loop Files, sounds\*.mp3 
+  For i, sound in sounds
   {
-    sound_categories := get_sound_categories(A_LoopFileName)
-    For i, category In sound_categories 
+    sound_categories := get_sound_categories(sound)
+    For j, category In sound_categories 
     {
       if (category = requested_category) 
       {
-        category_sounds.push(A_LoopFileName)
+        category_sounds.push(sound)
       }
     }
   }
@@ -477,7 +476,7 @@ play_random_sound(category) {
 
   if(category_sounds[random_index] != "")
   {
-    sound_path := A_ScriptDir . "\sounds\" . category_sounds[random_index]
+    sound_path := A_ScriptDir . "\sounds\" . category_sounds[random_index] . ".mp3"
     play_sound(sound_path)
   }
 }
