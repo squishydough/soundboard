@@ -98,8 +98,8 @@ gui_create() {
   {
     LV_Add("", category)
   }
-  ; Autosize columns
-  LV_ModifyCol() 
+  ; Autosize column
+  LV_ModifyCol(1, 450) 
 
   ; Add each sound to the sounds listview
   Gui, ListView, SysListView322
@@ -125,7 +125,9 @@ gui_create() {
     LV_Add("", sound_name, sound_categories_string, sound)
   }
   ; Autosize each column
-  LV_ModifyCol()
+  LV_ModifyCol(1, 350)
+  LV_ModifyCol(2, 100)
+  LV_ModifyCol(3, 1)
 
   Gui, Show, h624, Squishy's Soundboard
 }
@@ -215,7 +217,7 @@ handle_category_textfield() {
     LV_Add("", category)
   }
   ; Autosize columns
-  LV_ModifyCol()
+  LV_ModifyCol(1, 450)
 
   if(button_pressed = true)
   {
@@ -308,7 +310,9 @@ handle_individual_textfield() {
     LV_Add("", sound_name, sound_categories_string, sound)
   }
   ; Autosize columns
-  LV_ModifyCol()
+  LV_ModifyCol(1, 350)
+  LV_ModifyCol(2, 100)
+  LV_ModifyCol(3, 1)
 
   if(button_pressed = true)
   {
