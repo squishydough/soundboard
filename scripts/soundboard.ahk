@@ -6,6 +6,8 @@ global user_category_text := ""
 global user_individual_text := ""
 ; tracks which command selected from the dropdown menu
 global command_choice := ""
+;
+global include_category_when_filtering := 
 ; The pid of the vlc instance - used for stopping sounds
 global vlc_pid := ""
 ; Path to the VLC executable
@@ -72,16 +74,18 @@ gui_create() {
   Gui, +AlwaysOnTop
   Gui, Color, 1d1f21, 282a2e
   Gui, Font, s11, Segoe UI
-  Gui, Add, Text, %gui_control_options% x16 y44, Random Sound From Category
-  Gui, Add, Text, %gui_control_options% x16 y208, Specific Sound
-  Gui, Add, Text, -E0x500 x16 y544 %cForeground%, Other Commands:
+  Gui, Add, Text, %gui_control_options% x16 y8, Filter Sounds
+  Gui, Add, Text, %gui_control_options% x16 y64, Random Sound From Category
+  Gui, Add, Text, %gui_control_options% x16 y228, Specific Sound
+  Gui, Add, Text, -E0x500 x16 y564 %cForeground%, Other Commands
   Gui, Font, s10, Segoe UI
-  Gui, Add, Edit, %gui_control_options% x16 y12 vuser_category_text ghandle_textfield -WantReturn
-  Gui, Add, Button, w80 gstop_sound x456 y544, Stop Sound
-  Gui, Add, DropDownList, -E0x500 %cForeground% x148 y544 vcommand_choice ghandle_command_dropdown, ---||Clear Clipboard|Reload
+  Gui, Add, Edit, %gui_control_options% x16 y32 vuser_category_text gfilter_sounds -WantReturn
+  Gui, Add, CheckBox, vinclude_category_when_filtering gfilter_sounds -E0x500 x324 y228 %cForeground% Checked0, Include Category When Filtering?
+  Gui, Add, Button, w80 gstop_sound x456 y564, Stop Sound
+  Gui, Add, DropDownList, -E0x500 %cForeground% x148 y564 vcommand_choice ghandle_command_dropdown, ---||Clear Clipboard|Reload
   Gui, Font, s09, Segoe UI
-  Gui, Add, ListView, %gui_control_options% x16 y72 AltSubmit ghandle_category_listview, Category
-  Gui, Add, ListView, %gui_control_options% x16 y236 AltSubmit h300 ghandle_individual_listview, Name | Categories | File Name
+  Gui, Add, ListView, %gui_control_options% x16 y92 AltSubmit ghandle_category_listview, Category
+  Gui, Add, ListView, %gui_control_options% x16 y256 AltSubmit h300 ghandle_individual_listview, Name | Categories | File Name
 
   ; Add each category to the category listview  
   Gui, ListView, SysListView321
@@ -121,7 +125,7 @@ gui_create() {
   LV_ModifyCol(3, 1)
 
   ; Show the GUI
-  Gui, Show, h596, Squishy's Soundboard
+  Gui, Show, h616, Squishy's Soundboard
 }
 
 ;----------------------------------------------------
@@ -163,7 +167,7 @@ handle_command_dropdown(){
 ;----------------------------------------------------
 ;;;   Handles the textbox for sounds
 ;----------------------------------------------------
-handle_textfield() {
+filter_sounds() {
   Gui, Submit, NoHide
 
   ; Split the user text apart at spaces so that 
@@ -197,10 +201,21 @@ handle_textfield() {
   ; Get all matched individual sounds
   For index, sound in sounds
   {
+    sound_slug := ""
+
+    if include_category_when_filtering = 0
+    {
+      sound_slug := get_sound_name(sound)
+    }
+    else 
+    {
+      sound_slug := sound
+    }
+
     valid_sound := true
     For j, slug in user_input_slugs
     {
-      if !InStr(sound, slug)
+      if !InStr(sound_slug, slug)
       {
         valid_sound := false
         continue
