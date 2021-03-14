@@ -4,11 +4,6 @@ global gui_state = pinned
 global user_category_text := ""
 ; individual sound textfield user input
 global user_individual_text := ""
-; tracks which filter field the user is typing in
-; this helps with 
-global which_field_focused := ""
-; tracks whether enter was pressed in a filter field
-global button_pressed := false
 ; tracks which command selected from the dropdown menu
 global command_choice := ""
 ; The pid of the vlc instance - used for stopping sounds
@@ -50,8 +45,6 @@ GuiEscape:
 ;;;   Creates new instance of soundboard GUI
 ;----------------------------------------------------
 gui_create() {
-  ; Initialize state vars
-  button_pressed := false
   gui_state = pinned
   vlc_path := "C:\Program Files\VideoLAN\VLC\vlc.exe"
   vlc_audio_out := "Music (VB-Audio Cable A) ($1,$64)"
@@ -81,16 +74,14 @@ gui_create() {
   Gui, Font, s11, Segoe UI
   Gui, Add, Text, %gui_control_options%, Random Sound From Category
   Gui, Add, Text, %gui_control_options% x16 y208, Specific Sound
-  Gui, Add, Text, -E0x500 x16 y572 %cForeground%, Other Commands:
+  Gui, Add, Text, -E0x500 x16 y544 %cForeground%, Other Commands:
   Gui, Font, s10, Segoe UI
-  Gui, Add, Edit, %gui_control_options% x16 y40 vuser_category_text ghandle_category_textfield -WantReturn
-  Gui, Add, Edit, %gui_control_options% x16 y232 vuser_individual_text ghandle_individual_textfield
+  Gui, Add, Edit, %gui_control_options% x16 y40 vuser_category_text ghandle_textfield -WantReturn
   Gui, Add, Button, w80 gstop_sound x456 y6, Stop Sound
-  Gui, Add, DropDownList, -E0x500 %cForeground% x148 y572 vcommand_choice ghandle_command_dropdown, ---||Clear Clipboard|Reload
-  Gui, Add, Button, Default x-10 y-10 w1 h1 ghandle_user_input_on_enter
+  Gui, Add, DropDownList, -E0x500 %cForeground% x148 y544 vcommand_choice ghandle_command_dropdown, ---||Clear Clipboard|Reload
   Gui, Font, s09, Segoe UI
   Gui, Add, ListView, %gui_control_options% x16 y72 AltSubmit ghandle_category_listview, Category
-  Gui, Add, ListView, %gui_control_options% x16 y264 AltSubmit h300 ghandle_individual_listview, Name | Categories | File Name
+  Gui, Add, ListView, %gui_control_options% x16 y236 AltSubmit h300 ghandle_individual_listview, Name | Categories | File Name
 
   ; Add each category to the category listview  
   Gui, ListView, SysListView321
@@ -129,7 +120,8 @@ gui_create() {
   LV_ModifyCol(2, 100)
   LV_ModifyCol(3, 1)
 
-  Gui, Show, h624, Squishy's Soundboard
+  ; Show the GUI
+  Gui, Show, h596, Squishy's Soundboard
 }
 
 ;----------------------------------------------------
@@ -169,16 +161,10 @@ handle_command_dropdown(){
 }
 
 ;----------------------------------------------------
-;;;   Handles the textbox for sound categories
+;;;   Handles the textbox for sounds
 ;----------------------------------------------------
-handle_category_textfield() {
+handle_textfield() {
   Gui, Submit, NoHide
-
-  ; set that this field is focused
-  which_field_focused := "category"
-
-  ; Set focus on correct listview
-  Gui, ListView, SysListView321
 
   ; Split the user text apart at spaces so that 
   ; words don't have to be next to each other to be found
@@ -186,9 +172,9 @@ handle_category_textfield() {
 
   ; Array of categories that match the user slugs
   matched_categories := []
+  matched_sounds := []
 
-  categories := get_all_categories()
-
+  ; Get all matched categories
   For index, category in categories
   {
     valid_category := true
@@ -205,68 +191,10 @@ handle_category_textfield() {
     {
       continue
     }
-
     matched_categories.push(category)
   }
 
-  ; Remove all items
-  LV_Delete()
-  ; Add matched items only
-  For index, category in matched_categories
-  {
-    LV_Add("", category)
-  }
-  ; Autosize columns
-  LV_ModifyCol(1, 450)
-
-  if(button_pressed = true)
-  {
-    button_pressed := false
-
-    if(matched_categories.Length() = 1)
-    {
-      LV_GetText(RowText, 1)
-      play_random_sound(RowText)
-    }
-  }
-
-}
-
-;----------------------------------------------------
-;;;   Handles the listview for sound categories
-;----------------------------------------------------
-handle_category_listview() {
-  ; Force LV commands to use the appropriate listview
-  Gui, ListView, SysListView321
-  if (A_GuiEvent = "DoubleClick")
-  {
-    LV_GetText(RowText, A_EventInfo)
-    play_random_sound(RowText)
-    return
-  }
-}
-
-;----------------------------------------------------
-;;;   Handles the textfield for the individual sounds
-;----------------------------------------------------
-handle_individual_textfield() {
-  Gui, Submit, NoHide
-
-  ; Note that this field is focused
-  which_field_focused := "individual"
-
-  ; Set focus on correct listview
-  Gui, ListView, SysListView322
-
-  ; Split the user text apart at spaces so that 
-  ; words don't have to be next to each other to be found
-  user_input_slugs := StrSplit(user_individual_text, " ")
-
-  ; Array of sounds that match the user slugs
-  matched_sounds := []
-
-  sounds := get_all_sounds()
-
+  ; Get all matched individual sounds
   For index, sound in sounds
   {
     valid_sound := true
@@ -283,9 +211,24 @@ handle_individual_textfield() {
     {
       continue
     }
-    
+  
     matched_sounds.push(sound)
   }
+
+  ; Set focus on category listview
+  Gui, ListView, SysListView321
+  ; Remove all items
+  LV_Delete()
+  ; Add matched items only
+  For index, category in matched_categories
+  {
+    LV_Add("", category)
+  }
+  ; Autosize columns
+  LV_ModifyCol(1, 450)
+
+  ; Set focus on individual listview
+  Gui, ListView, SysListView322
 
   ; Remove all items
   LV_Delete()
@@ -313,16 +256,19 @@ handle_individual_textfield() {
   LV_ModifyCol(1, 350)
   LV_ModifyCol(2, 100)
   LV_ModifyCol(3, 1)
+}
 
-  if(button_pressed = true)
+;----------------------------------------------------
+;;;   Handles the listview for sound categories
+;----------------------------------------------------
+handle_category_listview() {
+  ; Force LV commands to use the appropriate listview
+  Gui, ListView, SysListView321
+  if (A_GuiEvent = "DoubleClick")
   {
-    button_pressed := false
-
-    if(matched_sounds.Length() = 1)
-    {
-      LV_GetText(RowText, 1, 3)
-      play_sound(A_ScriptDir . "\sounds\" . RowText . ".mp3")
-    }
+    LV_GetText(RowText, A_EventInfo)
+    play_random_sound(RowText)
+    return
   }
 }
 
@@ -335,23 +281,6 @@ handle_individual_listview() {
   {
     LV_GetText(RowText, A_EventInfo, 3)
     play_sound(A_ScriptDir . "\sounds\" . RowText . ".mp3")
-  }
-}
-
-;----------------------------------------------------
-;;;   Assists with submitting textfield on enter
-;----------------------------------------------------
-handle_user_input_on_enter() {
-  button_pressed := true
-  if(which_field_focused = "individual")
-  {
-    handle_individual_textfield()
-    return
-  }
-  else
-  {
-    handle_category_textfield()
-    return
   }
 }
 
