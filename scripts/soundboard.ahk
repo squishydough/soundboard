@@ -72,12 +72,12 @@ gui_create() {
   Gui, +AlwaysOnTop
   Gui, Color, 1d1f21, 282a2e
   Gui, Font, s11, Segoe UI
-  Gui, Add, Text, %gui_control_options%, Random Sound From Category
+  Gui, Add, Text, %gui_control_options% x16 y44, Random Sound From Category
   Gui, Add, Text, %gui_control_options% x16 y208, Specific Sound
   Gui, Add, Text, -E0x500 x16 y544 %cForeground%, Other Commands:
   Gui, Font, s10, Segoe UI
-  Gui, Add, Edit, %gui_control_options% x16 y40 vuser_category_text ghandle_textfield -WantReturn
-  Gui, Add, Button, w80 gstop_sound x456 y6, Stop Sound
+  Gui, Add, Edit, %gui_control_options% x16 y12 vuser_category_text ghandle_textfield -WantReturn
+  Gui, Add, Button, w80 gstop_sound x456 y544, Stop Sound
   Gui, Add, DropDownList, -E0x500 %cForeground% x148 y544 vcommand_choice ghandle_command_dropdown, ---||Clear Clipboard|Reload
   Gui, Font, s09, Segoe UI
   Gui, Add, ListView, %gui_control_options% x16 y72 AltSubmit ghandle_category_listview, Category
