@@ -6,8 +6,10 @@ global user_category_text := ""
 global user_individual_text := ""
 ; tracks which command selected from the dropdown menu
 global command_choice := ""
-;
-global include_category_when_filtering := 
+; tracks whether the box is checked
+global include_category_when_filtering := 0
+; tracks whether the user hit enter in the filter text field
+global text_field_enter_pressed := false
 ; The pid of the vlc instance - used for stopping sounds
 global vlc_pid := ""
 ; Path to the VLC executable
@@ -82,6 +84,7 @@ gui_create() {
   Gui, Add, Edit, %gui_control_options% x16 y32 vuser_category_text gfilter_sounds -WantReturn
   Gui, Add, CheckBox, vinclude_category_when_filtering gfilter_sounds -E0x500 x324 y228 %cForeground% Checked0, Include Category When Filtering?
   Gui, Add, Button, w80 gstop_sound x456 y564, Stop Sound
+  Gui, Add, Button, Default x-10 y-10 w1 h1 ghandle_textfield_submit
   Gui, Add, DropDownList, -E0x500 %cForeground% x148 y564 vcommand_choice ghandle_command_dropdown, ---||Clear Clipboard|Reload
   Gui, Font, s09, Segoe UI
   Gui, Add, ListView, %gui_control_options% x16 y92 AltSubmit ghandle_category_listview, Category
@@ -165,7 +168,30 @@ handle_command_dropdown(){
 }
 
 ;----------------------------------------------------
-;;;   Handles the textbox for sounds
+;;;   Triggered when enter pressed in filter textfield
+;----------------------------------------------------
+handle_textfield_submit() {
+  ; Focus on category listview
+  Gui, ListView, SysListView321
+  row_count := LV_GetCount()
+  if(row_count = 1)
+  {
+    LV_GetText(category, 1, 1)
+    play_random_sound(category)
+  }
+
+  ; If more than one category remaining, check individual files
+  Gui, ListView, SysListView322
+  row_count := LV_GetCount()
+  if(row_count = 1)
+  {
+    LV_GetText(file, 1, 3)
+    play_sound(A_ScriptDir . "\sounds\" . file . ".mp3")
+  }
+}
+
+;----------------------------------------------------
+;;;   Filters the sounds in the ListView
 ;----------------------------------------------------
 filter_sounds() {
   Gui, Submit, NoHide
