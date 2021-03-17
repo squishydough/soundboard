@@ -23,7 +23,9 @@ To start using the script, double-click `Soundboard.ahk` in the main folder.  On
 **Note: By default, Caps Lock will not work while the script is working.  You can press `Alt + CapsLock` to toggle it on and off.**
 
 ## Using the soundboard GUI
-Use the textbox above each list to filter the items in the list.  You can either double-click an item in the list, or press `Enter` in the textbox to play the sound.  **Note: Pressing `Enter` in the textbox only works if there is one item remaining in the list.**
+Use the textbox above each list to filter the items in the list.  You can either double-click an item in the list, or press `Enter` in the textbox to play the sound.
+
+When pressing enter in the filter textfield, the script will first check if there is one remaining category listed.  If so, it will play a random sound from that category.  If not, the script will then check if there is one remaining individual sound listed.  If so, it will play that.
 
 ## Adding sounds
 When I made this script, I wanted it to be very easy to add and organize your sounds without needing to do anything with the script.  In the project root, there is a sounds folder.  All mp3 files you add to this folder will automatically be brought into the script as soon as you reload the script.
