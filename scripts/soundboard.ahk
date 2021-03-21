@@ -54,9 +54,6 @@ gui_create() {
   sounds := get_all_sounds()
   categories := get_all_categories()
   unplayed_sounds := []
-  ; Initialize second keyboard
-  AHI := new AutoHotInterception()
-  keyboard_id := AHI.GetKeyboardId(keyboard_vid, keyboard_pid)
   ; Tomorrow Night Color Definitions:
   cBackground := "c" . "1d1f21"
   cCurrentLine := "c" . "282a2e"
@@ -533,6 +530,9 @@ keyboard_toggle()
   
   if(intercept_keyboard = 1)
   {
+    ; Initialize second keyboard
+    AHI := new AutoHotInterception()
+    keyboard_id := AHI.GetKeyboardId(keyboard_vid, keyboard_pid)
     AHI.SubscribeKeyboard(keyboard_id, true, Func("KeyEvent"))
   }
   else
