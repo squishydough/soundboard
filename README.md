@@ -122,3 +122,20 @@ global use_second_keyboard := true
 global keyboard_vid = 0x04CA
 global keyboard_pid = 0x0022
 ```
+
+### Configure your keymap
+
+Once everything is set up, you will need to update the keymap object in `SquishySoundboard.ahk` with your own preferences.  I have added comments to help you understand which property corresponds to which keystroke.  You can ignore the `spacer: ""` property, as that is just there to make reading easier.
+
+**Example**
+```
+global keymap := { spacer: ""
+; Key: 1
+, 2: ["hello", "bye"]
+; Key 2
+, 3: ["insult"]}
+```
+
+### That's it!
+
+With all of that done, pressing a key on your second keyboard sdhoulpd play a random sound from one of the categories you listed in the keymap!
