@@ -14,7 +14,7 @@ SetCapsLockState, AlwaysOff
 global vlc_path := "C:\Program Files\VideoLAN\VLC\vlc.exe"
 global vlc_audio_out := "Music (VB-Audio Cable A) ($1,$64)"
 ; script will only use second keyboard if use_second_keyboard is true
-global use_second_keyboard := true
+global use_second_keyboard := false
 global keyboard_vid = 0x04CA
 global keyboard_pid = 0x0022
 global keymap := {spacer: ""
@@ -88,6 +88,70 @@ global keymap := {spacer: ""
 , 39: []
 ; Key: single quote
 , 40: []
+; Key: Z
+, 44: []
+; Key: X
+, 45: []
+; Key: C
+, 46: []
+; Key: V
+, 47: []
+; Key: B
+, 48: []
+; Key: N
+, 49: []
+; Key: M
+, 50: []
+; Key: comma
+, 51: []
+; Key: period
+, 52: []
+; Key: front slash
+, 53: []
+; Key: spacebar
+, 57: []
+; Key: F1
+, 59: []
+; Key: F2
+, 60: []
+; Key: F3
+, 61: []
+; Key: F4
+, 62: []
+; Key: F5
+, 63: []
+; Key: F6
+, 64: []
+; Key: F7
+, 65: []
+; Key: F8
+, 66: []
+; Key: F9
+, 67: []
+; Key: F10
+, 68: []
+; Key: Num7
+, 71: []
+; Key: Num8
+, 72: []
+; Key: Num9
+, 73: []
+; Key: Num4
+, 75: []
+; Key: Num5
+, 76: []
+; Key: Num6
+, 77: []
+; Key: Num1
+, 79: []
+; Key: Num2
+, 80: []
+; Key: Num3
+, 81: []
+; Key: F11
+, 87: []
+; Key: F12
+, 88: []
 ; ignore this property - included just for readability
 , spacer2: ""}
 
