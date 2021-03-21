@@ -22,6 +22,7 @@ global intercept_keyboard := 0
 ; See README.md for help getting these values
 global keyboard_vid = 0x04CA
 global keyboard_pid = 0x0022
+;----------------------------------------------------------------------
 ; Keymap for categories to specific keys on the second keyboard
 ; IGNORE SPACER properties - just there for readability
 ;
@@ -32,6 +33,7 @@ global keyboard_pid = 0x0022
 ;
 ; the 1 key on the second keyboard will randomize a single category
 ; 2: ["insult"]
+;----------------------------------------------------------------------
 global keymap := {spacer: ""
 ; Key: 1
 , 2: []
