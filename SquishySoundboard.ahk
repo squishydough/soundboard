@@ -17,10 +17,33 @@ global vlc_audio_out := "Music (VB-Audio Cable A) ($1,$64)"
 global use_second_keyboard := true
 global keyboard_vid = 0x04CA
 global keyboard_pid = 0x0022
+global keymap := { spacer: ""
+; Key: 1
+, 2: "badman"
+; Key 2
+, 3: ""
+; Key 3
+, 4: ""
+; Key 4
+, 5: ""
+; Key 5
+, 6: ""
+; Key 6
+, 7: ""
+; Key 7
+, 8: ""
+; Key 8
+, 9: ""
+; Key 9
+, 10: ""}
 
 ;-------------------------------------------------------
 ; Launch our GUI
 ;-------------------------------------------------------
+if(use_second_keyboard == true)
+{
+  #Include %A_ScriptDir%\scripts\AHI\Lib\AutoHotInterception.ahk
+}
 gui_create()
 return
 ;-------------------------------------------------------

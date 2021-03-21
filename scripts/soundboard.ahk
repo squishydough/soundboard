@@ -19,6 +19,9 @@ global unplayed_sounds := []
 global sounds := []
 ; List of all categories
 global categories := []
+; Second keyboard values
+global AHI := ""
+global keyboard_id := ""
 
 CapsLock & Space::
   gui_toggle()
@@ -26,6 +29,7 @@ CapsLock & Space::
 
 GuiEscape:
   stop_sound()
+  gui_toggle()
   return
 
 ; Allow normal CapsLock functionality to be toggled by Alt+CapsLock:
@@ -50,6 +54,13 @@ gui_create() {
   sounds := get_all_sounds()
   categories := get_all_categories()
   unplayed_sounds := []
+  ; Initialize second keyboard
+  if(use_second_keyboard == true)
+  {
+    AHI := new AutoHotInterception()
+    keyboard_id := AHI.GetKeyboardId(keyboard_vid, keyboard_pid)
+    AHI.SubscribeKeyboard(keyboard_id, true, Func("KeyEvent"))
+  }
   ; Tomorrow Night Color Definitions:
   cBackground := "c" . "1d1f21"
   cCurrentLine := "c" . "282a2e"
@@ -180,6 +191,7 @@ handle_textfield_submit() {
   {
     LV_GetText(file, 1, 3)
     play_sound(A_ScriptDir . "\sounds\" . file . ".mp3")
+    gui_toggle()
   }
 }
 
@@ -315,6 +327,7 @@ handle_individual_listview() {
   {
     LV_GetText(RowText, A_EventInfo, 3)
     play_sound(A_ScriptDir . "\sounds\" . RowText . ".mp3")
+    gui_toggle()
   }
 }
 
@@ -409,7 +422,7 @@ get_sounds_in_category(requested_category) {
 ;----------------------------------------------------
 ;;;   Plays a random sound from a provided category
 ;----------------------------------------------------
-play_random_sound(category) {
+play_random_sound(category, toggle_gui = true) {
   category_sounds := get_sounds_in_category(category)
 
   if(category_sounds.Length() = 1)
@@ -445,6 +458,10 @@ play_random_sound(category) {
   {
     sound_path := A_ScriptDir . "\sounds\" . category_sounds[random_index] . ".mp3"
     play_sound(sound_path)
+    if(toggle_gui == true)
+    {
+      gui_toggle()
+    }
   }
 }
 
@@ -467,5 +484,28 @@ stop_sound() {
   oTrayInfo := TrayIcon_GetInfo("vlc.exe")
   TrayIcon_Remove(oTrayInfo[1].hWnd, oTrayInfo[1].uID)
   Process, Close, %vlc_pid%
-  gui_toggle()
-} 
+}
+
+;----------------------------------------------------
+;;;   Intercepts second keyboard keystrokes
+;----------------------------------------------------
+KeyEvent(code, state) {
+  ; Shows a tooltip with the code
+  ; Useful for identifying the code of a key
+	; ToolTip % "Keyboard Key - Code: " code ", State: " state
+
+  ; Function should only fire when key down, not key up
+  if(state == 1)
+  {
+    return
+  }
+
+  category := keymap[code]
+  play_random_sound(category, false)
+  if gui_state = pinned 
+  {
+    gui_state = hidden
+    Gui, -AlwaysOnTop
+    Gui, Minimize
+  }
+}
