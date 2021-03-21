@@ -101,7 +101,6 @@ gui_create() {
 
   ; Add each sound to the sounds listview
   Gui, ListView, SysListView322
-  sounds := get_all_sounds()
   ; Add each sound to the listview
   For index, sound in sounds
   {
