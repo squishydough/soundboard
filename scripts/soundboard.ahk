@@ -49,7 +49,7 @@ GuiEscape:
 ;;;   Creates new instance of soundboard GUI
 ;----------------------------------------------------
 gui_create() {
-  gui_state = pinned
+  gui_state := pinned
   vlc_path := "C:\Program Files\VideoLAN\VLC\vlc.exe"
   vlc_audio_out := "Music (VB-Audio Cable A) ($1,$64)"
   ; Initialize data
