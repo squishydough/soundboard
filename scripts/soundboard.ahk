@@ -1,5 +1,5 @@
 ﻿; set to pinned or hidden, used for toggling window position
-global gui_state = pinned
+global gui_state := pinned
 ; category textfield user input
 global user_category_text := ""
 ; individual sound textfield user input
