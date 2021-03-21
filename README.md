@@ -69,3 +69,56 @@ I find it works best to use as many of the words from the sound file in the file
 
 ### Creating sounds
 If you are looking to rip your own sounds from videos or other sound sources, you will want to [check out this article I wrote](https://joshpayette.dev/posts/create-your-own-soundboard) on setting up a virtual audio cable to play the sounds through your mic input, as well as tools to equalize the volume of the sounds and rip your own.
+
+## Using a second keyboard
+
+The below steps are optional.  You only need to do anything detailed below if you want to use a second keyboard to trigger random sounds. 
+
+![Keyboard Map](./misc/KeyboardMap.jpg)
+
+### Required installs
+
+Getting AHK to intercept keystrokes from a second keyboard, but not pass those keystrokes to Windows, requires the installation of a couple of tools, as well as some additional updates to the main `SquishySoundboard.ahk` script.
+
+#### Interception Driver
+In order to get a second keyboard working, you will need to install the [AHK Interception Driver 1.0.1](https://github.com/oblitum/interception/releases/tag/v1.0.1). Installation requires specific steps that I will detail below.  Do not just double-click files in the download or it won't work!
+
+1) Download the [AHK Interception Driver 1.0.1](https://github.com/oblitum/interception/releases/tag/v1.0.1) and then open the file.  Extract the `Interception` folder to your Desktop or other convenient location.
+
+2) Run command prompt as administrator.
+
+3) Browse to the `Interception` folder you extracted, then into the `command line installer` folder.
+
+4) Type `install-interception.exe /install`.
+
+5) Reboot after the install.
+
+![Interception Installer](./misc/InterceptionInstall.gif)
+
+#### AutoHotKey Interception (AHI) configuration
+
+The AHI tool makes the Interception driver available in our AHK script to use.  This allows us to actually capture the keystrokes and act upon them!
+
+1) Browse to your Soundboard folder, then into the `scripts\AHI\Lib` folder.
+
+2) Right-click on `Unblocker.ps1`, then click `Run With Powershell`.  This is because downloaded DLLs are often blocked and will not work.  This can be done manually by right clicking the DLLs, selecting Properties, and checking a "Block" box if it exists.
+
+### Determine `keyboard_vid` and `keyboard_pid` values
+
+Every keyboard has a unique VID and PID, and this will allow our script to target and intercept the correct keyboard.
+
+1) Plug in your second keyboard.
+
+2) Browse to your Soundboard folder, then run `scripts\AHI\Monitor.ahk`.
+
+3) Check the boxes next to all Keyboards, then press a key on your second keyboard.  The output portion of the window will show the ID of the device.  Look to the corresponding keyboard with that ID, and then jot down the VID and PID.  In the example below, our VID is `0x04CA` and the PID is `0x0022`.
+
+![Monitor Script](./misc/AHIMonitor.PNG)
+
+4) Open `SquishySoundboard.ahk`, then update the below lines with your own values.
+
+```
+global use_second_keyboard := true
+global keyboard_vid = 0x04CA
+global keyboard_pid = 0x0022
+```
