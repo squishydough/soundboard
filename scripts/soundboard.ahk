@@ -165,7 +165,6 @@ handle_command_dropdown(){
   if selected_command = Clear Clipboard
   {
     Run, % A_ScriptDir . "\scripts\clear-clipboard.bat"
-    MsgBox,,Success!,Clipboard was successfully cleared!
   }
   else if selected_command = Reload
   {
