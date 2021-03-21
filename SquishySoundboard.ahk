@@ -7,6 +7,13 @@ SendMode Input                ; Recommended for new scripts due to its superior 
 SetWorkingDir %A_ScriptDir%   ; Ensures a consistent starting directory.
 #SingleInstance
 SetCapsLockState, AlwaysOff
+
+;-------------------------------------------------------
+; User specific values
+;-------------------------------------------------------
+global vlc_path := "C:\Program Files\VideoLAN\VLC\vlc.exe"
+global vlc_audio_out := "Music (VB-Audio Cable A) ($1,$64)"
+
 ;-------------------------------------------------------
 ; Launch our GUI
 ;-------------------------------------------------------

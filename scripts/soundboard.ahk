@@ -12,10 +12,6 @@ global include_category_when_filtering := 0
 global text_field_enter_pressed := false
 ; The pid of the vlc instance - used for stopping sounds
 global vlc_pid := ""
-; Path to the VLC executable
-global vlc_path := ""
-; The waveout device as listed in VLC
-global vlc_audio_out := ""
 ; Tracks which sounds are unplaye for each category
 ; Helps ensure that the same sound doesn't play back to back
 global unplayed_sounds := []
@@ -50,8 +46,6 @@ GuiEscape:
 ;----------------------------------------------------
 gui_create() {
   gui_state = pinned
-  vlc_path := "C:\Program Files\VideoLAN\VLC\vlc.exe"
-  vlc_audio_out := "Music (VB-Audio Cable A) ($1,$64)"
   ; Initialize data
   sounds := get_all_sounds()
   categories := get_all_categories()

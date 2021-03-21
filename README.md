@@ -15,6 +15,38 @@ I found a tool by [Asger Juul Brunshøj](https://github.com/plul/Public-AutoHotK
 ## How it works
 This repo has a `/sounds` folder with a couple of sounds to get you started.  The script scans filenames in order to generate a list of categories and individual sounds, which are then populated into the interface.
 
+## Update script with your paths
+
+In order for the script to work, you will need to make a couple of changes specific to your setup.
+
+### Determine your `vlc_audio_out` value
+
+1) Run VLC Media Player.
+
+2) Go to **Tools -> Preferences**.
+
+3) Click on the **Audio** tab.  **Click this tab first or else you won't get a list of sound devices!**
+
+4) Under *Show settings* section at the bottom left of the window, choose **All**.
+
+5) Under the *Audio* category on the left, expand **Output Modules** and select **WaveOut**.
+
+6) Under the *Select Audio Device* dropdown box, look for *CABLE Output*, or whichever sound device you set as Hardware Input 2 in Voicemeeter. You need to copy **EXACTLY** what it shows in the dropdown box. Write or type down exactly what is in here.
+
+### Update the `SquishySoundboard.ahk` script
+
+1) In the folder where you saved the soundboard repository, open *SquishySoundboard.ahk* in a text editor.
+
+2) Search the file for the below line.  Replace the portion in double quotes after the equal sign with the device name you wrote down in Step 6.
+
+`global vlc_audio_out := "Music (VB-Audio Cable A) ($1,$64)"`
+
+3) You may also have to change this line to point to your VLC executable if the path differs.
+
+`global vlc_path := "C:\Program Files\VideoLAN\VLC\vlc.exe"`
+
+4) Save the script.
+
 ## Using the script
 The base requirements to use the script require installation of both [AutoHotKey](https://www.autohotkey.com) and [VLC Media Player](https://www.videolan.org/).  If you want others to hear your sounds when you play them, you will have to configure some additional software.  [I wrote an article detailing how to do this that you should check out!](https://joshpayette.dev/posts/create-your-own-soundboard)
 
