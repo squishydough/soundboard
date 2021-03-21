@@ -1,5 +1,5 @@
 ﻿; set to pinned or hidden, used for toggling window position
-global gui_state := pinned
+global gui_state = pinned
 ; category textfield user input
 global user_category_text := ""
 ; individual sound textfield user input
@@ -49,7 +49,7 @@ GuiEscape:
 ;;;   Creates new instance of soundboard GUI
 ;----------------------------------------------------
 gui_create() {
-  gui_state := pinned
+  gui_state = pinned
   vlc_path := "C:\Program Files\VideoLAN\VLC\vlc.exe"
   vlc_audio_out := "Music (VB-Audio Cable A) ($1,$64)"
   ; Initialize data
