@@ -90,7 +90,7 @@ gui_create() {
   Gui, Font, s10, Segoe UI
   Gui, Add, Edit, %gui_control_options% x16 y32 vuser_category_text gfilter_sounds -WantReturn
   Gui, Add, CheckBox, vinclude_category_when_filtering gfilter_sounds -E0x500 x324 y8 %cForeground%, Include Category When Filtering?
-  Gui, Add, CheckBox, vintercept_keyboard gkeyboard_toggle -E0x500 x372 y604 %cForeground% %intercept_keyboard_checked%, Intercept second keyboard?
+  Gui, Add, CheckBox, vintercept_keyboard gkeyboard_toggle -E0x500 x352 y604 %cForeground% %intercept_keyboard_checked%, Intercept second keyboard?
   Gui, Add, Button, w80 gstop_sound x456 y564, Stop Sound
   Gui, Add, Button, Default x-10 y-10 w1 h1 ghandle_textfield_submit
   Gui, Add, DropDownList, -E0x500 %cForeground% x148 y564 vcommand_choice ghandle_command_dropdown, ---||Clear Clipboard|Reload
