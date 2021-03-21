@@ -492,7 +492,7 @@ stop_sound() {
 KeyEvent(code, state) {
   ; Shows a tooltip with the code
   ; Useful for identifying the code of a key
-	; ToolTip % "Keyboard Key - Code: " code ", State: " state
+	;ToolTip % "Keyboard Key - Code: " code ", State: " state
 
   ; Function should only fire when key down, not key up
   if(state == 1)
@@ -500,8 +500,16 @@ KeyEvent(code, state) {
     return
   }
 
-  category := keymap[code]
-  play_random_sound(category, false)
+  ; categories defined in SquishySoundboard.ahk
+  categories := keymap[code]
+  ; Pick a random category
+  Random, rand, 1, categories.Length()
+
+  if(categories[rand])
+  {
+    play_random_sound(categories[rand], false)
+  }
+
   if gui_state = pinned 
   {
     gui_state = hidden
