@@ -2,7 +2,7 @@
 ; Built off of the original work by Asger Juul Brunshøj
 
 #NoEnv                        ; Recommended for performance and compatibility with future AutoHotkey releases.
-; #Warn                         ; Enable warnings to assist with detecting common errors.
+; #Warn                       ; Enable warnings to assist with detecting common errors.
 SendMode Input                ; Recommended for new scripts due to its superior speed and reliability.
 SetWorkingDir %A_ScriptDir%   ; Ensures a consistent starting directory.
 #SingleInstance
@@ -11,15 +11,22 @@ SetCapsLockState, AlwaysOff
 ;-------------------------------------------------------
 ; User specific values
 ;-------------------------------------------------------
+; Location of your VLC Executable
 global vlc_path := "C:\Program Files\VideoLAN\VLC\vlc.exe"
+; Voicemeeter Audio Out device as specified in VLC
+; See README.md for help getting this valuie
 global vlc_audio_out := "Music (VB-Audio Cable A) ($1,$64)"
-; script will only use second keyboard if use_second_keyboard is true
-global use_second_keyboard := false
+; Whether intercept keyboard is toggled off (0) or on (1) by default
+global intercept_keyboard := 1
+; Keyboard vid/pid for your second keyboard
+; See README.md for help getting these values
 global keyboard_vid = 0x04CA
 global keyboard_pid = 0x0022
+; Keymap for categories to specific keys on the second keyboard
+; IGNORE SPACER properties - just there for readability
 global keymap := {spacer: ""
 ; Key: 1
-, 2: []
+, 2: ["badman"]
 ; Key: 2
 , 3: []
 ; Key: 3
@@ -158,10 +165,6 @@ global keymap := {spacer: ""
 ;-------------------------------------------------------
 ; Launch our GUI
 ;-------------------------------------------------------
-if(use_second_keyboard == true)
-{
-  #Include %A_ScriptDir%\scripts\AHI\Lib\AutoHotInterception.ahk
-}
 gui_create()
 return
 ;-------------------------------------------------------
@@ -169,5 +172,7 @@ return
 #Include %A_ScriptDir%\scripts\utils.ahk
 ; TrayIcon library
 #Include %A_ScriptDir%\scripts\trayicon.ahk
+; Second keyboard interception script
+#Include %A_ScriptDir%\scripts\AHI\Lib\AutoHotInterception.ahk
 ; Load the soundboard GUI
 #Include %A_ScriptDir%\scripts\soundboard.ahk

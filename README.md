@@ -118,7 +118,6 @@ Every keyboard has a unique VID and PID, and this will allow our script to targe
 4) Open `SquishySoundboard.ahk`, then update the below lines with your own values.
 
 ```
-global use_second_keyboard := true
 global keyboard_vid = 0x04CA
 global keyboard_pid = 0x0022
 ```
