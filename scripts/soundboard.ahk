@@ -49,6 +49,8 @@ GuiEscape:
 ;;;   Creates new instance of soundboard GUI
 ;----------------------------------------------------
 gui_create() {
+  ; Initialize state
+  AHI := new AutoHotInterception()
   gui_state = pinned
   ; Initialize data
   sounds := get_all_sounds()
@@ -527,15 +529,21 @@ keyboard_toggle()
 {
   Gui, Submit, NoHide
   
-  if(intercept_keyboard = 1)
+  if(keyboard_vid != none && keyboard_pid != none)
   {
-    ; Initialize second keyboard
-    AHI := new AutoHotInterception()
-    keyboard_id := AHI.GetKeyboardId(keyboard_vid, keyboard_pid)
-    AHI.SubscribeKeyboard(keyboard_id, true, Func("KeyEvent"))
+    if(intercept_keyboard = 1)
+    {
+      ; Initialize second keyboard
+      keyboard_id := AHI.GetKeyboardId(keyboard_vid, keyboard_pid)
+      AHI.SubscribeKeyboard(keyboard_id, true, Func("KeyEvent"))
+    }
+    else
+    {
+      AHI.UnsubscribeKeyboard(keyboard_id)
+    }
   }
-  else
+  else 
   {
-    AHI.UnsubscribeKeyboard(keyboard_id)
+    MsgBox, Nothing happened, as the keyboard_vid and/or keyboard_pid are not set in user_settings.ahk!
   }
 }

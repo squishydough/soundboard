@@ -33,13 +33,13 @@ In order for the script to work, you will need to make a couple of changes speci
 
 6) Under the *Select Audio Device* dropdown box, look for *CABLE Output*, or whichever sound device you set as Hardware Input 2 in Voicemeeter. You need to copy **EXACTLY** what it shows in the dropdown box. Write or type down exactly what is in here.
 
-### Update the `SquishySoundboard.ahk` script
+### Update the `user-settings.ahk` file
 
-1) In the folder where you saved the soundboard repository, open *SquishySoundboard.ahk* in a text editor.
+1) In the folder where you saved the soundboard repository, open *user-settings.ahk* in a text editor.
 
 2) Search the file for the below line.  Replace the portion in double quotes after the equal sign with the device name you wrote down in Step 6.
 
-`global vlc_audio_out := "Music (VB-Audio Cable A) ($1,$64)"`
+`global vlc_audio_out := ""`
 
 3) You may also have to change this line to point to your VLC executable if the path differs.
 
