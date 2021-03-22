@@ -70,7 +70,7 @@ I find it works best to use as many of the words from the sound file in the file
 ### Creating sounds
 If you are looking to rip your own sounds from videos or other sound sources, you will want to [check out this article I wrote](https://joshpayette.dev/posts/create-your-own-soundboard) on setting up a virtual audio cable to play the sounds through your mic input, as well as tools to equalize the volume of the sounds and rip your own.
 
-## Using a second keyboard
+## (Optional) Using a second keyboard
 
 The below steps are optional.  You only need to do anything detailed below if you want to use a second keyboard to trigger random sounds. 
 
