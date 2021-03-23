@@ -5,13 +5,15 @@
 global vlc_path := "C:\Program Files\VideoLAN\VLC\vlc.exe"
 ; Voicemeeter Audio Out device as specified in VLC
 ; See README.md for help getting this valuie
-global vlc_audio_out := ""
-; Whether intercept keyboard is toggled off (0) or on (1) by default
+global vlc_audio_out := "Music (VB-Audio Cable A) ($1,$64)"
+; Whether intercept keyboard checkbox is toggled off (0) or on (1) by default
 global intercept_keyboard := 0
+; Whether the checkbox is toggled off (0) or on (1) by default
+global include_category_when_filtering_specific_sounds := 1
 ; Keyboard vid/pid for your second keyboard
 ; See README.md for help getting these values
-global keyboard_vid = none
-global keyboard_pid = none
+global keyboard_vid = 0x04CA
+global keyboard_pid = 0x0022
 ;----------------------------------------------------------------------
 ; Keymap for categories to specific keys on the second keyboard
 ; IGNORE SPACER properties - just there for readability
@@ -26,7 +28,7 @@ global keyboard_pid = none
 ;----------------------------------------------------------------------
 global keymap := {spacer: ""
 ; Key: 1
-, 2: []
+, 2: ["badman"]
 ; Key: 2
 , 3: []
 ; Key: 3

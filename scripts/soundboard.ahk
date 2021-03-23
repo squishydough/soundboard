@@ -6,8 +6,6 @@ global user_category_text := ""
 global user_individual_text := ""
 ; tracks which command selected from the dropdown menu
 global command_choice := ""
-; tracks whether the box is checked
-global include_category_when_filtering := 0
 ; tracks whether the user hit enter in the filter text field
 global text_field_enter_pressed := false
 ; The pid of the vlc instance - used for stopping sounds
@@ -81,6 +79,15 @@ gui_create() {
     intercept_keyboard_checked = Checked1
   }
 
+  if(include_category_when_filtering_specific_sounds == 0)
+  {
+    include_categories_checked = Checked0
+  }
+  else
+  {
+    include_categories_checked = Checked1
+  }
+
   Gui, Margin, 16, 16
   Gui, +AlwaysOnTop
   Gui, Color, 1d1f21, 282a2e
@@ -91,9 +98,9 @@ gui_create() {
   Gui, Add, Text, -E0x500 x16 y564 %cForeground%, Other Commands
   Gui, Font, s10, Segoe UI
   Gui, Add, Edit, %gui_control_options% x16 y32 vuser_category_text gfilter_sounds -WantReturn
-  Gui, Add, CheckBox, vinclude_category_when_filtering gfilter_sounds -E0x500 x324 y8 %cForeground%, Include Category When Filtering?
-  Gui, Add, CheckBox, vintercept_keyboard gkeyboard_toggle -E0x500 x352 y604 %cForeground% %intercept_keyboard_checked%, Intercept second keyboard?
-  Gui, Add, Button, w80 gstop_sound x456 y564, Stop Sound
+  Gui, Add, CheckBox, vinclude_category_when_filtering_specific_sounds gfilter_sounds -E0x500 x224 y228 %cForeground% %include_categories_checked%, Include Category When Filtering Specific Sounds?
+  Gui, Add, CheckBox, vintercept_keyboard gkeyboard_toggle -E0x500 x352 y8 %cForeground% %intercept_keyboard_checked%, Intercept second keyboard?
+  Gui, Add, Button, w80 gstop_sound x452 y564, Stop Sound
   Gui, Add, Button, Default x-10 y-10 w1 h1 ghandle_textfield_submit
   Gui, Add, DropDownList, -E0x500 %cForeground% x148 y564 vcommand_choice ghandle_command_dropdown, ---||Clear Clipboard|Reload
   Gui, Font, s09, Segoe UI
@@ -137,7 +144,7 @@ gui_create() {
   LV_ModifyCol(3, 1)
 
   ; Show the GUI
-  Gui, Show, h636, Squishy's Soundboard
+  Gui, Show, h612, Squishy's Soundboard
 }
 
 ;----------------------------------------------------
@@ -238,7 +245,7 @@ filter_sounds() {
   {
     sound_slug := ""
 
-    if include_category_when_filtering = 0
+    if include_category_when_filtering_specific_sounds = 0
     {
       sound_slug := get_sound_name(sound)
     }
