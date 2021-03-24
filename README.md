@@ -50,14 +50,11 @@ In order for the script to work, you will need to make a couple of changes speci
 ## Using the script
 The base requirements to use the script require installation of both [AutoHotKey](https://www.autohotkey.com) and [VLC Media Player](https://www.videolan.org/).  If you want others to hear your sounds when you play them, you will have to configure some additional software.  [I wrote an article detailing how to do this that you should check out!](https://joshpayette.dev/posts/create-your-own-soundboard)
 
-To start using the script, double-click `SquishySoundboard.ahk` in the main folder.  Once the script is running, you can press `CapsLock + Spacebar` to minimize/maximize the gui, making it quick to swap to/from a game or other window.
+To start using the script, double-click `SquishySoundboard.ahk` in the main folder. Once the script is running, you can press `CapsLock + Spacebar` to minimize/maximize the gui, making it quick to swap to/from a game or other window. 
+
+Use filter textbox at the top of the window to filter the items in the list.  You can either double-click an item in the list, or press `Enter` in the textbox to play the sound.  **Note: Pressing `Enter` in the textbox only works if there is one item remaining in the category or individual items list.**  Pressing `Escape` with the window open will stop playing the sound.
 
 **Note: By default, Caps Lock will not work while the script is working.  You can press `Alt + CapsLock` to toggle it on and off.**
-
-## Using the soundboard GUI
-Use the textbox above each list to filter the items in the list.  You can either double-click an item in the list, or press `Enter` in the textbox to play the sound.
-
-When pressing enter in the filter textfield, the script will first check if there is one remaining category listed.  If so, it will play a random sound from that category.  If not, the script will then check if there is one remaining individual sound listed.  If so, it will play that.
 
 ## Adding sounds
 When I made this script, I wanted it to be very easy to add and organize your sounds without needing to do anything with the script.  In the project root, there is a sounds folder.  All mp3 files you add to this folder will automatically be brought into the script as soon as you reload the script.
@@ -78,7 +75,7 @@ The below steps are optional.  You only need to do anything detailed below if yo
 
 ### Required installs
 
-Getting AHK to intercept keystrokes from a second keyboard, but not pass those keystrokes to Windows, requires the installation of a couple of tools, as well as some additional updates to the main `SquishySoundboard.ahk` script.
+Getting AHK to intercept keystrokes from a second keyboard, but not pass those keystrokes to Windows, requires the installation of a couple of tools, as well as some additional updates to the `user-settings.ahk` script.
 
 #### Interception Driver
 In order to get a second keyboard working, you will need to install the [AHK Interception Driver 1.0.1](https://github.com/oblitum/interception/releases/tag/v1.0.1). Installation requires specific steps that I will detail below.  Do not just double-click files in the download or it won't work!
@@ -115,7 +112,7 @@ Every keyboard has a unique VID and PID, and this will allow our script to targe
 
 ![Monitor Script](./misc/AHIMonitor.PNG)
 
-4) Open `SquishySoundboard.ahk`, then update the below lines with your own values.
+4) Open `user-settings.ahk`, then update the below lines with your own values.
 
 ```
 global keyboard_vid = 0x04CA
@@ -124,7 +121,7 @@ global keyboard_pid = 0x0022
 
 ### Configure your keymap
 
-Once everything is set up, you will need to update the keymap object in `SquishySoundboard.ahk` with your own preferences.  I have added comments to help you understand which property corresponds to which keystroke.  You can ignore the `spacer: ""` property, as that is just there to make reading easier.
+Once everything is set up, you will need to update the keymap object in `user-settings.ahk` with your own preferences.  I have added comments to help you understand which property corresponds to which keystroke.  You can ignore the `spacer: ""` property, as that is just there to make reading easier.
 
 **Example**
 ```
