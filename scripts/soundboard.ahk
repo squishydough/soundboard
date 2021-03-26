@@ -275,11 +275,6 @@ filter_sounds() {
     matched_sounds.push(sound)
   }
 
-  if(matched_sounds.Length() == 0)
-  {
-    matched_sounds := sounds
-  }
-
   ; Set focus on category listview
   Gui, ListView, SysListView321
   ; Remove all items
