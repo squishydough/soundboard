@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Changes for 03/25/21
+
+- Fixed errors around initializing and toggling second keyboard.
+
 ## Changes for 03/23/21
 
 - Added default setting for **Include Category When Filtering Specific Sounds?** to `user-settings.ahk`.

@@ -49,6 +49,7 @@ GuiEscape:
 gui_create() {
   ; Initialize state
   AHI := new AutoHotInterception()
+  keyboard_id := AHI.GetKeyboardId(keyboard_vid, keyboard_pid)
   gui_state = pinned
   ; Initialize data
   sounds := get_all_sounds()
@@ -69,6 +70,8 @@ gui_create() {
   cPurple := "c" . "b294bb"
   ; -E0x200 removes border around Edit controls
   gui_control_options := "xm w520 " . cForeground . " -E0x500"
+  ; Initialize the second keyboard toggle
+  keyboard_toggle()
 
   if(intercept_keyboard == 0) 
   {
@@ -270,6 +273,11 @@ filter_sounds() {
     }
   
     matched_sounds.push(sound)
+  }
+
+  if(matched_sounds.Length() == 0)
+  {
+    matched_sounds := sounds
   }
 
   ; Set focus on category listview
@@ -540,12 +548,10 @@ keyboard_toggle()
   {
     if(intercept_keyboard = 1)
     {
-      ; Initialize second keyboard
-      keyboard_id := AHI.GetKeyboardId(keyboard_vid, keyboard_pid)
       AHI.SubscribeKeyboard(keyboard_id, true, Func("KeyEvent"))
     }
     else
-    {
+    { 
       AHI.UnsubscribeKeyboard(keyboard_id)
     }
   }
