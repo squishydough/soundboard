@@ -2,7 +2,8 @@
 
 ## Changes for 03/25/21
 
-- Fixed errors around initializing and toggling second keyboard.
+- Fixed errors that popped up when toggling and untoggling second keyboard in some situations.
+- Fixed bug where categories listview would not filter properly after pressing a key on the second keyboard.
 
 ## Changes for 03/23/21
 

@@ -1,7 +1,7 @@
 ﻿; set to pinned or hidden, used for toggling window position
 global gui_state = pinned
 ; category textfield user input
-global user_category_text := ""
+global user_filter_text := ""
 ; individual sound textfield user input
 global user_individual_text := ""
 ; tracks which command selected from the dropdown menu
@@ -100,7 +100,7 @@ gui_create() {
   Gui, Add, Text, %gui_control_options% x16 y228, Specific Sound
   Gui, Add, Text, -E0x500 x16 y564 %cForeground%, Other Commands
   Gui, Font, s10, Segoe UI
-  Gui, Add, Edit, %gui_control_options% x16 y32 vuser_category_text gfilter_sounds -WantReturn
+  Gui, Add, Edit, %gui_control_options% x16 y32 vuser_filter_text gfilter_sounds -WantReturn
   Gui, Add, CheckBox, vinclude_category_when_filtering_specific_sounds gfilter_sounds -E0x500 x224 y228 %cForeground% %include_categories_checked%, Include Category When Filtering Specific Sounds?
   Gui, Add, CheckBox, vintercept_keyboard gkeyboard_toggle -E0x500 x352 y8 %cForeground% %intercept_keyboard_checked%, Intercept second keyboard?
   Gui, Add, Button, w80 gstop_sound x452 y564, Stop Sound
@@ -217,7 +217,7 @@ filter_sounds() {
 
   ; Split the user text apart at spaces so that 
   ; words don't have to be next to each other to be found
-  user_input_slugs := StrSplit(user_category_text, " ")
+  user_input_slugs := StrSplit(user_filter_text, " ")
 
   ; Array of categories that match the user slugs
   matched_categories := []
@@ -515,13 +515,13 @@ KeyEvent(code, state) {
   }
 
   ; categories defined in SquishySoundboard.ahk
-  categories := keymap[code]
+  key_categories := keymap[code]
   ; Pick a random category
-  Random, rand, 1, categories.Length()
+  Random, rand, 1, key_categories.Length()
 
-  if(categories[rand])
+  if(key_categories[rand])
   {
-    play_random_sound(categories[rand], false)
+    play_random_sound(key_categories[rand], false)
   }
 
   if gui_state = pinned 
@@ -530,6 +530,7 @@ KeyEvent(code, state) {
     Gui, -AlwaysOnTop
     Gui, Minimize
   }
+
 }
 
 ;----------------------------------------------------
