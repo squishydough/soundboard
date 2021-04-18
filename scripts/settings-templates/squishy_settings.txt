@@ -7,13 +7,13 @@ global vlc_path := "C:\Program Files\VideoLAN\VLC\vlc.exe"
 ; See README.md for help getting this valuie
 global vlc_audio_out := "Music (VB-Audio Cable A) ($1,$64)"
 ; Whether intercept keyboard checkbox is toggled off (0) or on (1) by default
-global intercept_keyboard := 0
+global intercept_keyboard := 1
 ; Whether the checkbox is toggled off (0) or on (1) by default
 global include_category_when_filtering_specific_sounds := 1
 ; Keyboard vid/pid for your second keyboard
 ; See README.md for help getting these values
-global keyboard_vid := ""
-global keyboard_pid := ""
+global keyboard_vid = 0x04CA
+global keyboard_pid = 0x0022
 ;----------------------------------------------------------------------
 ; Keymap for categories to specific keys on the second keyboard
 ; IGNORE SPACER properties - just there for readability
@@ -52,17 +52,17 @@ global keymap := {spacer: ""
 ; Key: equals
 , 13: []
 ; Key: Q
-, 16: []
+, 16: ["death"]
 ; Key: W
-, 17: []
+, 17: ["hello"]
 ; Key: E
-, 18: []
+, 18: ["bye"]
 ; Key: R
-, 19: []
+, 19: ["belittle"]
 ; Key: T
-, 20: []
+, 20: ["taunt"]
 ; Key: Y
-, 21: []
+, 21: ["insult"]
 ; Key: U
 , 22: []
 ; Key: I
@@ -70,7 +70,7 @@ global keymap := {spacer: ""
 ; Key: O
 , 24: []
 ; Key: P
-, 25: []
+, 25: ["smau"]
 ; Key: [
 , 26: []
 ; Key: ]
@@ -78,47 +78,47 @@ global keymap := {spacer: ""
 ; Key: A
 , 30: []
 ; Key: S
-, 31: []
+, 31: ["confused"]
 ; Key: D
-, 32: []
+, 32: ["okay"]
 ; Key: F
-, 33: []
+, 33: ["fun"]
 ; Key: G
-, 34: []
+, 34: ["command"]
 ; Key: H
-, 35: []
+, 35: ["ouch"]
 ; Key: J
-, 36: []
+, 36: ["oops"]
 ; Key: K
-, 37: []
+, 37: ["stop"]
 ; Key: L
-, 38: []
+, 38: ["thanks"]
 ; Key: semicolon
 , 39: []
 ; Key: single quote
-, 40: []
+, 40: ["threat"]
 ; Key: Z
-, 44: []
+, 44: ["agree", "yes"]
 ; Key: X
-, 45: []
+, 45: ["disagree", "no"]
 ; Key: C
-, 46: []
+, 46: ["yes", "agree"]
 ; Key: V
-, 47: []
+, 47: ["no", "disagree"]
 ; Key: B
-, 48: []
+, 48: ["understood"]
 ; Key: N
-, 49: []
+, 49: ["sorry"]
 ; Key: M
-, 50: []
+, 50: ["cheer"]
 ; Key: comma
-, 51: []
+, 51: ["self deprecation"]
 ; Key: period
-, 52: []
+, 52: ["random"]
 ; Key: front slash
-, 53: []
+, 53: ["rage"]
 ; Key: spacebar
-, 57: []
+, 57: ["boast"]
 ; Key: F1
 , 59: []
 ; Key: F2
