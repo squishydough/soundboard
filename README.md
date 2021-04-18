@@ -1,5 +1,9 @@
 # Squishy's Soundboard
 
+## Quick Links
+
+- [CHANGELOG.md](./CHANGELOG.md)
+
 ## What is this?
 After trying several other soundboard tools available for download, I was never quite satisfied.  
 

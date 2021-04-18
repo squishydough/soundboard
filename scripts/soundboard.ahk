@@ -107,6 +107,7 @@ gui_create() {
   Gui, Add, Edit, %gui_control_options% x16 y32 vuser_filter_text gfilter_sounds -WantReturn
   Gui, Add, CheckBox, vinclude_category_when_filtering_specific_sounds gfilter_sounds -E0x500 x224 y228 %cForeground% %include_categories_checked%, Include Category When Filtering Specific Sounds?
   Gui, Add, CheckBox, vintercept_keyboard gkeyboard_toggle -E0x500 x352 y8 %cForeground% %intercept_keyboard_checked%, Intercept second keyboard?
+  Gui, Add, Button, w120 grandom_button_clicked x328 y564, Random Sound
   Gui, Add, Button, w80 gstop_sound x452 y564, Stop Sound
   Gui, Add, Button, Default x-10 y-10 w1 h1 ghandle_textfield_submit
   Gui, Add, DropDownList, -E0x500 %cForeground% x148 y564 vcommand_choice ghandle_command_dropdown, ---||Clear Clipboard|Reload
@@ -383,6 +384,14 @@ get_all_categories() {
 }
 
 ;----------------------------------------------------
+;;;   Returns a random category
+;----------------------------------------------------
+get_random_category() {
+  Random, rand, 1, categories.Length()
+  return categories[rand]
+}
+
+;----------------------------------------------------
 ;;;   Parses categories from a provided sound_name
 ;;;
 ;;;     * Categories are enclosed in [] and separated by commas in sound_name
@@ -435,6 +444,16 @@ get_sounds_in_category(requested_category) {
     }
   }
   return category_sounds
+}
+
+;----------------------------------------------------
+;;;   Plays a random sound from a provided category
+;----------------------------------------------------
+random_button_clicked() {
+  Random, rand, 1, sounds.Length()
+  sound_path := A_ScriptDir . "\sounds\" . sounds[rand] . ".mp3"
+  play_sound(sound_path)
+  gui_toggle()
 }
 
 ;----------------------------------------------------
