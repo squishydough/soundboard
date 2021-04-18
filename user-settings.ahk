@@ -116,7 +116,7 @@ global keymap := {spacer: ""
 ; Key: period
 , 52: ["random"]
 ; Key: front slash
-, 53: ["response"]
+, 53: ["rage"]
 ; Key: spacebar
 , 57: ["boast"]
 ; Key: F1

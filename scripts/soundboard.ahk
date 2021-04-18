@@ -49,7 +49,11 @@ GuiEscape:
 gui_create() {
   ; Initialize state
   AHI := new AutoHotInterception()
-  keyboard_id := AHI.GetKeyboardId(keyboard_vid, keyboard_pid)
+  keyboard_id := {}
+  if(keyboard_vid != "" and keyboard_pid != "") 
+  {
+    keyboard_id := AHI.GetKeyboardId(keyboard_vid, keyboard_pid)
+  }
   gui_state = pinned
   ; Initialize data
   sounds := get_all_sounds()
@@ -553,6 +557,6 @@ keyboard_toggle()
   }
   else 
   {
-    MsgBox, Nothing happened, as the keyboard_vid and/or keyboard_pid are not set in user_settings.ahk!
+    ;MsgBox, Nothing happened, as the keyboard_vid and/or keyboard_pid are not set in user_settings.ahk!
   }
 }
