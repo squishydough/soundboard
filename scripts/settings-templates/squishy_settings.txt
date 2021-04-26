@@ -86,7 +86,7 @@ global keymap := {spacer: ""
 ; Key: G
 , 34: ["command"]
 ; Key: H
-, 35: ["ouch"]
+, 35: ["ouch", "i died"]
 ; Key: J
 , 36: ["oops"]
 ; Key: K
@@ -116,7 +116,7 @@ global keymap := {spacer: ""
 ; Key: period
 , 52: ["random"]
 ; Key: front slash
-, 53: ["rage"]
+, 53: ["anger"]
 ; Key: spacebar
 , 57: ["boast"]
 ; Key: F1
