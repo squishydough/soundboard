@@ -5,6 +5,7 @@
 - [CHANGELOG.md](./CHANGELOG.md)
 
 ## What is this?
+
 After trying several other soundboard tools available for download, I was never quite satisfied.  
 
 - I wanted a tool that would make it easy to play specific sounds from a library of hundreds of sounds.  
@@ -17,6 +18,7 @@ I found a tool by [Asger Juul Brunshøj](https://github.com/plul/Public-AutoHotK
 ![sample image](./misc/sample.PNG)
 
 ## How it works
+
 This repo has a `/sounds` folder with a couple of sounds to get you started.  The script scans filenames in order to generate a list of categories and individual sounds, which are then populated into the interface.
 
 ## Update script with your paths
@@ -25,33 +27,34 @@ In order for the script to work, you will need to make a couple of changes speci
 
 ### Determine your `vlc_audio_out` value
 
-1) Run VLC Media Player.
+1. Run VLC Media Player.
 
-2) Go to **Tools -> Preferences**.
+1. Go to **Tools -> Preferences**.
 
-3) Click on the **Audio** tab.  **Click this tab first or else you won't get a list of sound devices!**
+1. Click on the **Audio** tab.  **Click this tab first or else you won't get a list of sound devices!**
 
-4) Under *Show settings* section at the bottom left of the window, choose **All**.
+1. Under *Show settings* section at the bottom left of the window, choose **All**.
 
-5) Under the *Audio* category on the left, expand **Output Modules** and select **WaveOut**.
+1. Under the *Audio* category on the left, expand **Output Modules** and select **WaveOut**.
 
-6) Under the *Select Audio Device* dropdown box, look for *CABLE Output*, or whichever sound device you set as Hardware Input 2 in Voicemeeter. You need to copy **EXACTLY** what it shows in the dropdown box. Write or type down exactly what is in here.
+1. Under the *Select Audio Device* dropdown box, look for *CABLE Output*, or whichever sound device you set as Hardware Input 2 in Voicemeeter. You need to copy **EXACTLY** what it shows in the dropdown box. Write or type down exactly what is in here.
 
 ### Update the `user-settings.ahk` file
 
-1) In the folder where you saved the soundboard repository, open *user-settings.ahk* in a text editor.
+1. In the folder where you saved the soundboard repository, open *user-settings.ahk* in a text editor.
 
-2) Search the file for the below line.  Replace the portion in double quotes after the equal sign with the device name you wrote down in Step 6.
+1. Search the file for the below line.  Replace the portion in double quotes after the equal sign with the device name you wrote down in Step 6.
 
-`global vlc_audio_out := ""`
+   `global vlc_audio_out := ""`
 
-3) You may also have to change this line to point to your VLC executable if the path differs.
+1. You may also have to change this line to point to your VLC executable if the path differs.
 
-`global vlc_path := "C:\Program Files\VideoLAN\VLC\vlc.exe"`
+   `global vlc_path := "C:\Program Files\VideoLAN\VLC\vlc.exe"`
 
-4) Save the script.
+1. Save the script.
 
 ## Using the script
+
 The base requirements to use the script require installation of both [AutoHotKey](https://www.autohotkey.com) and [VLC Media Player](https://www.videolan.org/).  If you want others to hear your sounds when you play them, you will have to configure some additional software.  [I wrote an article detailing how to do this that you should check out!](https://joshpayette.dev/posts/create-your-own-soundboard)
 
 To start using the script, double-click `SquishySoundboard.ahk` in the main folder. Once the script is running, you can press `CapsLock + Spacebar` to minimize/maximize the gui, making it quick to swap to/from a game or other window. 
@@ -61,15 +64,24 @@ Use filter textbox at the top of the window to filter the items in the list.  Yo
 **Note: By default, Caps Lock will not work while the script is working.  You can press `Alt + CapsLock` to toggle it on and off.**
 
 ## Adding sounds
+
 When I made this script, I wanted it to be very easy to add and organize your sounds without needing to do anything with the script.  In the project root, there is a sounds folder.  All mp3 files you add to this folder will automatically be brought into the script as soon as you reload the script.
 
 ### Naming the sounds
+
 Your file name should generally follow this structure: `search terms for file [category1, category2].mp3.`  The script will check each file name and take the comma-separated category names from with the `[]` square brackets.  The individual file names list is everything in the file name not enclosed in the square brackets.
 
 I find it works best to use as many of the words from the sound file in the file name, making it easy to filter down and get to the exact file you want.  You can add as many categories as you want, allowing this file to be included if you randomly play a certain category.
 
 ### Creating sounds
+
 If you are looking to rip your own sounds from videos or other sound sources, you will want to [check out this article I wrote](https://joshpayette.dev/posts/create-your-own-soundboard) on setting up a virtual audio cable to play the sounds through your mic input, as well as tools to equalize the volume of the sounds and rip your own.
+
+### Unblocking extracted files
+
+If you share sounds with other users of the soundboard, you may run into issues where the files are blocked. You can run the below in PowerShell to unblock the files.
+
+`dir -Path [directory path] -Recurse | Unblock-File`
 
 ## (Optional) Using a second keyboard
 
@@ -82,6 +94,7 @@ The below steps are optional.  You only need to do anything detailed below if yo
 Getting AHK to intercept keystrokes from a second keyboard, but not pass those keystrokes to Windows, requires the installation of a couple of tools, as well as some additional updates to the `user-settings.ahk` script.
 
 #### Interception Driver
+
 In order to get a second keyboard working, you will need to install the [AHK Interception Driver 1.0.1](https://github.com/oblitum/interception/releases/tag/v1.0.1). Installation requires specific steps that I will detail below.  Do not just double-click files in the download or it won't work!
 
 1) Download the [AHK Interception Driver 1.0.1](https://github.com/oblitum/interception/releases/tag/v1.0.1) and then open the file.  Extract the `Interception` folder to your Desktop or other convenient location.
