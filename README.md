@@ -21,7 +21,7 @@ I found a tool by [Asger Juul Brunshøj](https://github.com/plul/Public-AutoHotK
 
 ## Requirements
 
-In order to run this script, you must have [AutoHotKey](https://www.autohotkey.com/) installed on your system.
+In order to run this script, you must have [AutoHotKey](https://www.autohotkey.com/) installed on your system.  Additionally, this script utilized [VLC Media Player](https://www.videolan.org/vlc/download-windows.html) for audio playback.
 
 ## How it works
 
