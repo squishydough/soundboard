@@ -75,7 +75,11 @@ When I made this script, I wanted it to be very easy to add and organize your so
 
 ### Naming the sounds
 
-Your file name should generally follow this structure: `search terms for file [category1, category2].mp3.`  The script will check each file name and take the comma-separated category names from with the `[]` square brackets.  The individual file names list is everything in the file name not enclosed in the square brackets.
+Your file name should follow this structure: 
+
+`search terms for file [category1, category2].mp3.`  
+
+The script will check each file name and take the comma-separated category names from with the `[]` square brackets.  The individual file names list is everything in the file name not enclosed in the square brackets.
 
 I find it works best to use as many of the words from the sound file in the file name, making it easy to filter down and get to the exact file you want.  You can add as many categories as you want, allowing this file to be included if you randomly play a certain category.
 
