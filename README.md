@@ -1,5 +1,7 @@
 # Squishy's Soundboard
 
+If you like this project and want a way to integrate it with your Twitch chat, check out my [soundboard-twitch-bot project](https://github.com/joshwaiam/soundboard-twitch-bot)
+
 ## Quick Links
 
 - [CHANGELOG.md](./CHANGELOG.md)
