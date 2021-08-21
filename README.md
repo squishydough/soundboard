@@ -19,6 +19,10 @@ I found a tool by [Asger Juul Brunshøj](https://github.com/plul/Public-AutoHotK
 
 ![sample image](./misc/sample.PNG)
 
+## Requirements
+
+In order to run this script, you must have [AutoHotKey](https://www.autohotkey.com/) installed on your system.
+
 ## How it works
 
 This repo has a `/sounds` folder with a couple of sounds to get you started.  The script scans filenames in order to generate a list of categories and individual sounds, which are then populated into the interface.
