@@ -9,6 +9,9 @@ There is no great way to update the script without some possible duplication of 
 
 Once you have everything backed up, download the latest .zip file and drag the files like you did when you first installed the script.  [See the README.md file for more specific setup instructions](./README.md)
 
+## Changes for 08/21/21
+- Added Powershell script to README.md in order to claim ownership of sound libraries (rarely needed).
+
 ## Changes for 04/18/21
 
 - Fixed a bug causing errors to be thrown if incorrect or empty `keyboard_vid` or `keyboard_pid` was found.
