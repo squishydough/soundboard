@@ -5,7 +5,7 @@
 global vlc_path := "C:\Program Files\VideoLAN\VLC\vlc.exe"
 ; Voicemeeter Audio Out device as specified in VLC
 ; See README.md for help getting this valuie
-global vlc_audio_out := "CABLE Input (VB-Audio Virtual C ($1,$64)"
+global vlc_audio_out := "Soundboard (VB-Audio Virtual Ca ($1,$64)"
 ; Whether intercept keyboard checkbox is toggled off (0) or on (1) by default
 global intercept_keyboard := 1
 ; Whether the checkbox is toggled off (0) or on (1) by default
